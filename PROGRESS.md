@@ -41,36 +41,36 @@
 
 ### 2.1 Golang Microservices Skeleton
 - [ ] **Auth Service**
-  - [ ] Inisialisasi Go module (`go mod init`)
+  - [x] Inisialisasi Go module (`go mod init`)
   - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
-  - [ ] Entry point `cmd/main.go` dengan HTTP server dasar
+  - [x] Entry point `cmd/main.go` dengan HTTP server dasar
   - [ ] Konfigurasi loader (env vars)
-  - [ ] Health check endpoint (`GET /health`)
+  - [x] Health check endpoint (`GET /health`)
   - [ ] Metrics endpoint (`GET /metrics`)
-  - [ ] Dockerfile (multi-stage build)
+  - [x] Dockerfile (multi-stage build)
 - [ ] **Product Service**
-  - [ ] Inisialisasi Go module (`go mod init`)
+  - [x] Inisialisasi Go module (`go mod init`)
   - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
-  - [ ] Entry point `cmd/main.go` dengan HTTP server dasar
+  - [x] Entry point `cmd/main.go` dengan HTTP server dasar
   - [ ] Konfigurasi loader (env vars)
-  - [ ] Health check endpoint (`GET /health`)
+  - [x] Health check endpoint (`GET /health`)
   - [ ] Metrics endpoint (`GET /metrics`)
-  - [ ] Dockerfile (multi-stage build)
+  - [x] Dockerfile (multi-stage build)
 - [ ] **Order Service**
-  - [ ] Inisialisasi Go module (`go mod init`)
+  - [x] Inisialisasi Go module (`go mod init`)
   - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
-  - [ ] Entry point `cmd/main.go` dengan HTTP server dasar
+  - [x] Entry point `cmd/main.go` dengan HTTP server dasar
   - [ ] Konfigurasi loader (env vars)
-  - [ ] Health check endpoint (`GET /health`)
+  - [x] Health check endpoint (`GET /health`)
   - [ ] Metrics endpoint (`GET /metrics`)
-  - [ ] Dockerfile (multi-stage build)
+  - [x] Dockerfile (multi-stage build)
 
 ### 2.2 Client Application Skeleton
-- [ ] Inisialisasi Next.js project (`npx create-next-app@latest`)
-- [ ] Setup Tailwind CSS
-- [ ] Konfigurasi environment variables (API gateway URL)
-- [ ] Layout dasar (header, footer, navigation)
-- [ ] Halaman placeholder (Home, Product List, Login)
+- [x] Inisialisasi Next.js project (`npx create-next-app@latest`)
+- [x] Setup Tailwind CSS
+- [x] Konfigurasi environment variables (API gateway URL)
+- [x] Layout dasar (header, footer, navigation)
+- [x] Halaman placeholder (Home, Product List, Login)
 
 ### 2.3 Docker Compose
 - [ ] `docker-compose.yml` untuk development environment
