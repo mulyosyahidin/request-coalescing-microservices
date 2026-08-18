@@ -1,6 +1,19 @@
 "use client";
 
+import { useActionState, useEffect } from "react";
+import { registerAction } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
+
 export default function RegisterPage() {
+  const [state, formAction, isPending] = useActionState(registerAction, null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.success) {
+      router.push("/customer/dashboard");
+    }
+  }, [state, router]);
+
   return (
     <div className="min-h-[80vh] flex flex-col justify-center items-center px-4 py-12">
       <div className="w-full max-w-md bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-6">
@@ -18,15 +31,23 @@ export default function RegisterPage() {
         </div>
 
         {/* Mock Form */}
-        <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+        <form action={formAction} className="space-y-4">
+          {state?.error && (
+            <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm text-center">
+              {state.error}
+            </div>
+          )}
+
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
               Full Name
             </label>
             <input
               type="text"
+              name="name"
+              defaultValue={state?.fields?.name || ""}
               placeholder="Alice Smith"
-              defaultValue="Alice Smith"
+              required
               className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
             />
           </div>
@@ -37,8 +58,10 @@ export default function RegisterPage() {
             </label>
             <input
               type="email"
+              name="email"
+              defaultValue={state?.fields?.email || ""}
               placeholder="alice@example.com"
-              defaultValue="alice@example.com"
+              required
               className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
             />
           </div>
@@ -49,8 +72,10 @@ export default function RegisterPage() {
             </label>
             <input
               type="password"
+              name="password"
+              defaultValue={state?.fields?.password || ""}
               placeholder="••••••••"
-              defaultValue="password123"
+              required
               className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
             />
           </div>
@@ -61,8 +86,10 @@ export default function RegisterPage() {
             </label>
             <input
               type="password"
+              name="confirmPassword"
+              defaultValue={state?.fields?.confirmPassword || ""}
               placeholder="••••••••"
-              defaultValue="password123"
+              required
               className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
             />
           </div>
@@ -72,6 +99,7 @@ export default function RegisterPage() {
               id="terms"
               type="checkbox"
               defaultChecked
+              required
               className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-700 rounded mt-0.5"
             />
             <label htmlFor="terms" className="ml-2 block text-xs text-gray-600 dark:text-gray-400">
@@ -81,9 +109,10 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition"
+            disabled={isPending}
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition"
           >
-            Create Account (Mock)
+            {isPending ? "Registering..." : "Create Account"}
           </button>
         </form>
 

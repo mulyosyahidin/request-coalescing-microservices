@@ -2,17 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { cookies } from "next/headers";
+import { logoutAction } from "./actions/auth";
 
 export const metadata: Metadata = {
   title: "RequestCoalescing Store",
   description: "E-Commerce demonstration app for API Gateway Request Coalescing experiments",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  const isAuthenticated = !!token;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
@@ -55,18 +61,36 @@ export default function RootLayout({
 
                 {/* User Actions */}
                 <div className="flex items-center space-x-3">
-                  <a
-                    href="/login"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                  >
-                    Sign In
-                  </a>
-                  <a
-                    href="/register"
-                    className="text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg shadow-sm shadow-indigo-200 transition"
-                  >
-                    Create Account
-                  </a>
+                  {isAuthenticated ? (
+                    <>
+                      <a
+                        href="/customer/dashboard"
+                        className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                      >
+                        Dashboard
+                      </a>
+                      <form action={logoutAction}>
+                        <button className="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition">
+                          Sign out
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <>
+                      <a
+                        href="/login"
+                        className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                      >
+                        Sign In
+                      </a>
+                      <a
+                        href="/register"
+                        className="text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg shadow-sm shadow-indigo-200 transition"
+                      >
+                        Create Account
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -91,8 +115,14 @@ export default function RootLayout({
                 </div>
                 <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
                   <a href="/products" className="hover:text-indigo-600 transition">Products</a>
-                  <a href="/login" className="hover:text-indigo-600 transition">Login</a>
-                  <a href="/register" className="hover:text-indigo-600 transition">Register</a>
+                  {isAuthenticated ? (
+                    <a href="/customer/dashboard" className="hover:text-indigo-600 transition">Dashboard</a>
+                  ) : (
+                    <>
+                      <a href="/login" className="hover:text-indigo-600 transition">Login</a>
+                      <a href="/register" className="hover:text-indigo-600 transition">Register</a>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
