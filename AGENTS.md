@@ -20,7 +20,7 @@ Mengukur dan membandingkan dampak fitur *request coalescing* (concurrent request
 | ------------------ | ------------------------------ | ------------------------------------------------- |
 | API Gateway        | **KrakenD**                    | Konfigurasi coalescing & non-coalescing           |
 | Microservices      | **Go (Golang)**                | auth-service, product-service, order-service      |
-| Client Application | **Next.js**                    | SSR/CSR frontend untuk simulasi traffic realistis |
+| Client Application | **Next.js**                    | SSR/CSR frontend (Runtime & PM: **Bun**)          |
 | Load Testing       | **K6 (Grafana)**               | Skenario hot-key burst dan load test              |
 | Observability      | **Grafana, Prometheus, Loki, Alloy** | Metrics, logs, dan tracing                  |
 | Database           | **PostgreSQL**                 | Database per service (database-per-service pattern)|
@@ -33,10 +33,10 @@ Mengukur dan membandingkan dampak fitur *request coalescing* (concurrent request
 
 ```
 RequestCoalescing/
-├── API-Gateway/            # Konfigurasi KrakenD (krakend.json, flexible config)
-├── ClientApp/              # Next.js frontend
-├── K6/                     # Skenario load testing K6
-├── Microservices/
+├── api-gateway/            # Konfigurasi KrakenD (krakend.json, flexible config)
+├── client-app/             # Next.js frontend
+├── load-testing/           # Skenario load testing K6
+├── microservices/
 │   ├── auth-service/       # Autentikasi & otorisasi (JWT)
 │   ├── product-service/    # CRUD produk & cache layer
 │   └── order-service/      # Manajemen order & checkout
@@ -160,6 +160,7 @@ RequestCoalescing/
 
 ### 5.4. Next.js Client App
 
+- **Runtime & Package Manager:** **Bun** (`bun`) untuk semua manajemen package (`bun add`, `bun install`, `bun remove`) dan eksekusi scripts (`bun run dev`, `bun run build`, `bunx`). JANGAN gunakan `npm`, `yarn`, atau `pnpm`.
 - **Versi:** Next.js 14+ (App Router).
 - **Styling:** Tailwind CSS.
 - **State Management:** React hooks + context (atau Zustand jika kompleks).
@@ -243,6 +244,7 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
 14. **Format Response Standar** — Semua endpoint di seluruh service WAJIB mengembalikan JSON dengan envelope standar:
     - **Sukses:** `{"success": true, "message": "string", "data": { ... }}`
     - **Gagal/Error:** `{"success": false, "message": "string", "error": { "code": "ERROR_CODE" }}`
+15. **Selalu gunakan Bun** — Seluruh eksekusi perintah JavaScript/TypeScript di frontend (`client-app`), termasuk package management (`bun add`, `bun install`) dan script runner (`bun run dev`, `bun run build`, `bunx`), WAJIB menggunakan `bun` alih-alih `npm`/`yarn`/`pnpm`.
 
 ### 6.2. DILARANG
 
@@ -256,6 +258,7 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
 8. ❌ Jangan hardcode role di kode — gunakan constant atau enum. Jangan gunakan string literal `"admin"` / `"customer"` tersebar di banyak tempat.
 9. ❌ Jangan izinkan registrasi publik menghasilkan role `admin` — admin hanya melalui seed atau endpoint internal.
 10. ❌ Jangan mengembalikan response mentah/non-JSON (misal plain text `http.Error` bawaan Go) — semua response wajib JSON ber-envelope standar.
+11. ❌ Jangan gunakan `npm`, `npx`, `yarn`, atau `pnpm` untuk client app — selalu gunakan `bun` atau `bunx`.
 
 ### 6.3. PRIORITAS KEPUTUSAN
 

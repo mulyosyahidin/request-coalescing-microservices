@@ -107,7 +107,7 @@ services:
   # ============================================================================
   auth-service:
     build:
-      context: ./Microservices/auth-service
+      context: ./microservices/auth-service
       dockerfile: Dockerfile
     container_name: auth-service
     restart: unless-stopped
@@ -127,7 +127,7 @@ services:
 
   product-service:
     build:
-      context: ./Microservices/product-service
+      context: ./microservices/product-service
       dockerfile: Dockerfile
     container_name: product-service
     restart: unless-stopped
@@ -147,7 +147,7 @@ services:
 
   order-service:
     build:
-      context: ./Microservices/order-service
+      context: ./microservices/order-service
       dockerfile: Dockerfile
     container_name: order-service
     restart: unless-stopped
@@ -177,7 +177,7 @@ services:
     ports:
       - "${KRAKEND_PORT}:${KRAKEND_PORT}"
     volumes:
-      - ./API-Gateway/krakend.json:/etc/krakend/krakend.json:ro
+      - ./api-gateway/krakend.json:/etc/krakend/krakend.json:ro
     environment:
       KRAKEND_PORT: ${KRAKEND_PORT}
     depends_on:

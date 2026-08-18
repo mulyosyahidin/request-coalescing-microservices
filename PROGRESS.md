@@ -19,12 +19,12 @@
 ## Fase 1: Perencanaan & Inisialisasi Proyek ✅
 
 - [x] Membuat struktur direktori proyek
-  - [x] `/API-Gateway`
-  - [x] `/ClientApp`
-  - [x] `/K6`
-  - [x] `/Microservices/auth-service`
-  - [x] `/Microservices/product-service`
-  - [x] `/Microservices/order-service`
+  - [x] `/api-gateway`
+  - [x] `/client-app`
+  - [x] `/load-testing`
+  - [x] `/microservices/auth-service`
+  - [x] `/microservices/product-service`
+  - [x] `/microservices/order-service`
   - [x] `/observability/grafana`
   - [x] `/observability/prometheus`
 - [x] Membuat `.gitignore`
@@ -40,29 +40,29 @@
 ## Fase 2: Setup Skeleton & Boilerplate
 
 ### 2.1 Golang Microservices Skeleton
-- [ ] **Auth Service**
+- [x] **Auth Service**
   - [x] Inisialisasi Go module (`go mod init`)
-  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
+  - [x] Setup project layout (`cmd/`, `internal/`, `migrations/`)
   - [x] Entry point `cmd/main.go` dengan HTTP server dasar
-  - [ ] Konfigurasi loader (env vars)
+  - [x] Konfigurasi loader (env vars)
   - [x] Health check endpoint (`GET /health`)
-  - [ ] Metrics endpoint (`GET /metrics`)
+  - [x] Metrics endpoint (`GET /metrics`)
   - [x] Dockerfile (multi-stage build)
-- [ ] **Product Service**
+- [x] **Product Service**
   - [x] Inisialisasi Go module (`go mod init`)
-  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
+  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`) — *(dikerjakan di Fase 3.2)*
   - [x] Entry point `cmd/main.go` dengan HTTP server dasar
-  - [ ] Konfigurasi loader (env vars)
+  - [ ] Konfigurasi loader (env vars) — *(dikerjakan di Fase 3.2)*
   - [x] Health check endpoint (`GET /health`)
-  - [ ] Metrics endpoint (`GET /metrics`)
+  - [x] Metrics endpoint (`GET /metrics`)
   - [x] Dockerfile (multi-stage build)
-- [ ] **Order Service**
+- [x] **Order Service**
   - [x] Inisialisasi Go module (`go mod init`)
-  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
+  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`) — *(dikerjakan di Fase 3.3)*
   - [x] Entry point `cmd/main.go` dengan HTTP server dasar
-  - [ ] Konfigurasi loader (env vars)
+  - [ ] Konfigurasi loader (env vars) — *(dikerjakan di Fase 3.3)*
   - [x] Health check endpoint (`GET /health`)
-  - [ ] Metrics endpoint (`GET /metrics`)
+  - [x] Metrics endpoint (`GET /metrics`)
   - [x] Dockerfile (multi-stage build)
 
 ### 2.2 Client Application Skeleton
@@ -73,40 +73,49 @@
 - [x] Halaman placeholder (Home, Product List, Login)
 
 ### 2.3 Docker Compose
-- [ ] `docker-compose.yml` untuk development environment
-  - [ ] KrakenD service
-  - [ ] auth-service + auth-db (PostgreSQL)
-  - [ ] product-service + product-db (PostgreSQL)
-  - [ ] order-service + order-db (PostgreSQL)
-  - [ ] Prometheus
-  - [ ] Grafana
-  - [ ] Network configuration
-- [ ] Verifikasi semua service bisa start dan saling berkomunikasi
-- [ ] Dokumentasi cara menjalankan (`README.md` atau di `AGENTS.md`)
+- [x] `docker-compose.yml` untuk development environment
+  - [x] KrakenD service
+  - [x] auth-service + auth-db (PostgreSQL)
+  - [x] product-service + product-db (PostgreSQL)
+  - [x] order-service + order-db (PostgreSQL)
+  - [x] Prometheus
+  - [x] Grafana
+  - [x] Loki + Alloy
+  - [x] Swagger UI (OpenAPI docs)
+  - [x] Network configuration
+  - [x] Verifikasi semua service bisa start dan saling berkomunikasi
+  - [x] Dokumentasi cara menjalankan (`README.md` atau di `AGENTS.md`)
 
 ---
 
 ## Fase 3: Implementasi API Gateway & Microservices
 
-### 3.1 Auth Service — Implementasi Penuh
+### 3.1 Auth Service — Implementasi Penuh ✅
 - [x] **Database**
   - [x] Migration: Create `users` table
-  - [x] Repository layer (CRUD user)
+  - [x] Repository layer (CRUD user, interface + PostgreSQL implementation)
 - [x] **Business Logic**
-  - [x] Register: validasi input, hash password, simpan user
-  - [x] Login: verifikasi credentials, generate JWT
+  - [x] Register: validasi input, hash password, simpan user (default role: customer)
+  - [x] Login: verifikasi credentials, generate JWT (claim role, exp, sub)
+  - [x] Admin Provisioning: create admin account (role: admin)
   - [x] Token validation: parse & verify JWT
 - [x] **HTTP Handlers**
   - [x] `POST /api/v1/auth/register`
   - [x] `POST /api/v1/auth/login`
-  - [x] `POST /internal/auth/validate` (Digantikan oleh GET /me)
+  - [x] `POST /api/v1/auth/logout`
+  - [x] `GET /api/v1/auth/me`
+  - [x] `POST /internal/auth/validate`
+  - [x] `POST /internal/auth/admin`
 - [x] **Middleware**
   - [x] Request logging middleware
   - [x] CORS middleware
-- [ ] **Testing**
-  - [ ] Unit tests untuk service layer
-  - [ ] Unit tests untuk repository layer
-  - [ ] Integration test (handler → service → DB)
+  - [x] Auth middleware (JWT verification & context extraction)
+- [x] **Testing**
+  - [x] Unit tests untuk service layer (`auth_service_test.go`)
+  - [x] Unit tests untuk repository layer (`user_repository_test.go`)
+  - [x] Unit tests untuk handler layer (`auth_handler_test.go`)
+  - [x] Unit tests untuk middleware layer (`auth_middleware_test.go`, `cors_middleware_test.go`)
+  - [x] Integration test (`integration_test.go`) — E2E HTTP flow test
 
 ### 3.2 Product Service — Implementasi Penuh
 - [ ] **Database**
@@ -160,8 +169,8 @@
 
 ### 3.4 KrakenD API Gateway
 - [ ] **Konfigurasi Dasar**
-  - [ ] `krakend.json` dengan route mapping semua endpoint
-  - [ ] JWT validation pada endpoint yang memerlukan auth
+  - [x] `krakend.json` dengan route mapping semua endpoint
+  - [ ] JWT validation pada endpoint yang memerlukan auth (KrakenD plugin)
   - [x] CORS configuration
   - [ ] Rate limiting
   - [ ] Timeout & circuit breaker per backend
@@ -169,8 +178,8 @@
   - [ ] Konfigurasi mode **Coalescing ON** (concurrent_calls, backend dedup)
   - [ ] Konfigurasi mode **Coalescing OFF** (baseline)
   - [ ] Mekanisme toggle/switch antara dua mode (env var atau file terpisah)
-- [ ] **Metrics**
-  - [ ] Expose KrakenD metrics ke Prometheus
+- [x] **Metrics**
+  - [x] Expose KrakenD metrics ke Prometheus (Port 9091)
 - [ ] **Testing**
   - [ ] Verifikasi routing untuk semua endpoint
   - [ ] Verifikasi JWT validation bekerja
@@ -178,10 +187,10 @@
 
 ### 3.5 Client Application
 - [ ] **Pages**
-  - [ ] Home page dengan produk unggulan
-  - [ ] Product List page (pagination, filter)
+  - [x] Home page dengan produk unggulan (Mock UI)
+  - [x] Product List page (pagination, search, filter - Mock UI)
   - [ ] Product Detail page
-  - [ ] Login & Register page
+  - [x] Login & Register page (Mock UI)
   - [ ] Cart page (client-side state)
   - [ ] Checkout page
   - [ ] Order History page
@@ -325,7 +334,7 @@
 | Fase | Nama                               | Target     | Status |
 | ---- | ---------------------------------- | ---------- | ------ |
 | 1    | Perencanaan & Inisialisasi         | ✅ Selesai  | ✅     |
-| 2    | Setup Skeleton & Boilerplate       | —          | ⬜     |
+| 2    | Setup Skeleton & Boilerplate       | ✅ Selesai  | ✅     |
 | 3    | Implementasi API Gateway & Service | —          | 🔄     |
 | 4    | Observability Stack                | ✅ Selesai  | ✅     |
 | 5    | Load Testing & Eksperimen         | —          | ⬜     |

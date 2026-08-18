@@ -11,7 +11,7 @@ Dokumen ini menjabarkan tanggung jawab, fitur awal, dan gambaran endpoint untuk 
 
 ---
 
-## 1. Auth Service (`/Microservices/auth-service`)
+## 1. Auth Service (`/microservices/auth-service`)
 
 ### Tanggung Jawab
 Menangani registrasi, login, validasi token JWT, dan **pengelolaan role (RBAC)**. Menjadi satu-satunya service yang menerbitkan dan memverifikasi token autentikasi. Setiap JWT yang diterbitkan wajib menyertakan claim `role` agar service lain bisa menerapkan otorisasi.
@@ -84,7 +84,7 @@ Setiap token JWT yang diterbitkan oleh auth-service **WAJIB** mengikuti struktur
 
 ---
 
-## 2. Product Service (`/Microservices/product-service`)
+## 2. Product Service (`/microservices/product-service`)
 
 ### Tanggung Jawab
 Mengelola data produk (CRUD). Menjadi **target utama** eksperimen request coalescing karena endpoint baca produk (`GET /products/:id`) akan menerima burst traffic tinggi.
@@ -151,12 +151,12 @@ GET    /metrics                        → Prometheus metrics
 - **Otorisasi RBAC:** Middleware di product-service harus membaca header `X-User-Role` (diteruskan oleh KrakenD dari JWT claims) dan menolak request write jika role ≠ `admin`. Validasi ini harus terjadi di service level, bukan hanya mengandalkan gateway.
 - Tambahkan custom Prometheus counter: `product_db_queries_total` (label: `product_id`) untuk mengukur berapa kali query benar-benar sampai ke database.
 - Tambahkan custom histogram: `product_handler_duration_seconds` untuk mengukur latency handler.
-- Endpoint `/internal/cache/products/:id` (DELETE) sudah digunakan oleh K6 script yang ada ([`product-hot-key.js`](file:///Users/martinms/Projects/RequestCoalescing/K6/product-hot-key.js)) untuk reset cache sebelum test.
+- Endpoint `/internal/cache/products/:id` (DELETE) sudah digunakan oleh K6 script yang ada ([`product-hot-key.js`](file:///Users/martinms/Projects/RequestCoalescing/load-testing/product-hot-key.js)) untuk reset cache sebelum test.
 - In-memory cache opsional di level service (untuk membandingkan efek coalescing gateway vs cache service-level).
 
 ---
 
-## 3. Order Service (`/Microservices/order-service`)
+## 3. Order Service (`/microservices/order-service`)
 
 ### Tanggung Jawab
 Mengelola proses pemesanan (checkout). Berkomunikasi dengan product-service untuk validasi stok. **Menerapkan data isolation berbasis ownership**: customer hanya bisa mengakses order miliknya sendiri, sementara admin bisa melihat seluruh order.
@@ -253,7 +253,7 @@ GET    /metrics                        → Prometheus metrics
 
 ---
 
-## 4. API Gateway (`/API-Gateway`)
+## 4. API Gateway (`/api-gateway`)
 
 ### Tanggung Jawab
 Menjadi single entry point untuk semua request dari client. Melakukan routing, rate limiting, dan — yang menjadi inti eksperimen — **request coalescing/deduplication**.
@@ -308,7 +308,7 @@ PATCH  /api/v1/orders/:id/status    →   order-service:8080/api/v1/orders/:id/s
 
 ---
 
-## 5. Client Application (`/ClientApp`)
+## 5. Client Application (`/client-app`)
 
 ### Tanggung Jawab
 Frontend Next.js yang menyediakan UI realistis untuk interaksi user dan juga berfungsi sebagai sumber traffic alami (selain K6 synthetic load).
@@ -349,7 +349,7 @@ Frontend Next.js yang menyediakan UI realistis untuk interaksi user dan juga ber
 
 ---
 
-## 6. Load Testing (`/K6`)
+## 6. Load Testing (`/load-testing`)
 
 ### Tanggung Jawab
 Menyediakan skenario load test K6 untuk menghasilkan traffic terukur dan mengukur dampak request coalescing.
@@ -365,7 +365,7 @@ Menyediakan skenario load test K6 untuk menghasilkan traffic terukur dan menguku
 | T5  | Sustained Load            | Ramp-up gradual untuk menemukan titik saturasi                   | 🔲 Belum      |
 
 ### Script yang Sudah Ada
-- [`product-hot-key.js`](file:///Users/martinms/Projects/RequestCoalescing/K6/product-hot-key.js): Burst test di mana semua VU request `GET /api/v1/products/1` secara bersamaan. Termasuk setup step untuk reset cache. Configurable via env vars `BASE_URL` dan `VUS`.
+- [`product-hot-key.js`](file:///Users/martinms/Projects/RequestCoalescing/load-testing/product-hot-key.js): Burst test di mana semua VU request `GET /api/v1/products/1` secara bersamaan. Termasuk setup step untuk reset cache. Configurable via env vars `BASE_URL` dan `VUS`.
 
 ---
 

@@ -52,6 +52,7 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(authmiddleware.CORSMiddleware)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		handler.RespondSuccess(w, http.StatusOK, "Hello World from Auth Service", map[string]string{
@@ -77,6 +78,11 @@ func main() {
 			r.Post("/logout", authHandler.HandleLogout)
 			r.Get("/me", authHandler.HandleMe)
 		})
+	})
+
+	r.Route("/internal/auth", func(r chi.Router) {
+		r.Post("/validate", authHandler.HandleValidate)
+		r.Post("/admin", authHandler.HandleCreateAdmin)
 	})
 
 	server := &http.Server{

@@ -9,15 +9,21 @@ import (
 	"auth-service/internal/model"
 )
 
-type UserRepository struct {
+type UserRepository interface {
+	CreateUser(ctx context.Context, user *model.User) error
+	GetUserByEmail(ctx context.Context, email string) (*model.User, error)
+	GetUserByID(ctx context.Context, id string) (*model.User, error)
+}
+
+type PostgresUserRepository struct {
 	db *pgxpool.Pool
 }
 
-func NewUserRepository(db *pgxpool.Pool) *UserRepository {
-	return &UserRepository{db: db}
+func NewUserRepository(db *pgxpool.Pool) UserRepository {
+	return &PostgresUserRepository{db: db}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, user *model.User) error {
+func (r *PostgresUserRepository) CreateUser(ctx context.Context, user *model.User) error {
 	query := `
 		INSERT INTO users (name, email, password_hash, role)
 		VALUES ($1, $2, $3, $4)
@@ -28,7 +34,7 @@ func (r *UserRepository) CreateUser(ctx context.Context, user *model.User) error
 	return err
 }
 
-func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+func (r *PostgresUserRepository) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	query := `
 		SELECT id, name, email, password_hash, role, created_at, updated_at
 		FROM users
@@ -47,7 +53,7 @@ func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*mod
 	return &u, nil
 }
 
-func (r *UserRepository) GetUserByID(ctx context.Context, id string) (*model.User, error) {
+func (r *PostgresUserRepository) GetUserByID(ctx context.Context, id string) (*model.User, error) {
 	query := `
 		SELECT id, name, email, password_hash, role, created_at, updated_at
 		FROM users
