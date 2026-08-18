@@ -36,18 +36,25 @@ func main() {
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(Response{
-			Message: "Hello World from Order Service",
-			Service: ServiceName,
-			Status:  "ok",
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Hello World from Order Service",
+			"data": map[string]string{
+				"service": ServiceName,
+				"status":  "ok",
+			},
 		})
 	})
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(map[string]string{
-			"status":  "ok",
-			"service": ServiceName,
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Service is healthy",
+			"data": map[string]string{
+				"service": ServiceName,
+				"status":  "up",
+			},
 		})
 	})
 

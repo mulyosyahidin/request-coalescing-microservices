@@ -17,6 +17,7 @@
     {
       "endpoint": "/gateway-health",
       "method": "GET",
+      "input_headers": ["*"],
       "output_encoding": "json",
       "backend": [
         {
@@ -31,6 +32,7 @@
     {
       "endpoint": "/api/v1/auth/register",
       "method": "POST",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
@@ -45,6 +47,7 @@
     {
       "endpoint": "/api/v1/auth/login",
       "method": "POST",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
@@ -57,8 +60,39 @@
       ]
     },
     {
+      "endpoint": "/api/v1/auth/logout",
+      "method": "POST",
+      "input_headers": ["*"],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/auth/logout",
+          "encoding": "no-op",
+          "host": [
+            "http://auth-service:8080"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/auth/me",
+      "method": "GET",
+      "input_headers": ["*"],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/auth/me",
+          "encoding": "no-op",
+          "host": [
+            "http://auth-service:8080"
+          ]
+        }
+      ]
+    },
+    {
       "endpoint": "/api/v1/products",
       "method": "GET",
+      "input_headers": ["*"],
       "output_encoding": "json",
       "backend": [
         {
@@ -73,6 +107,7 @@
     {
       "endpoint": "/api/v1/products/{id}",
       "method": "GET",
+      "input_headers": ["*"],
       "output_encoding": "json",
       "backend": [
         {
@@ -87,6 +122,7 @@
     {
       "endpoint": "/api/v1/products",
       "method": "POST",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
@@ -101,6 +137,7 @@
     {
       "endpoint": "/api/v1/products/{id}",
       "method": "PUT",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
@@ -115,6 +152,7 @@
     {
       "endpoint": "/api/v1/products/{id}",
       "method": "DELETE",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
@@ -129,6 +167,7 @@
     {
       "endpoint": "/api/v1/orders",
       "method": "POST",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
@@ -143,6 +182,7 @@
     {
       "endpoint": "/api/v1/orders",
       "method": "GET",
+      "input_headers": ["*"],
       "output_encoding": "json",
       "backend": [
         {
@@ -157,6 +197,7 @@
     {
       "endpoint": "/api/v1/orders/{id}",
       "method": "GET",
+      "input_headers": ["*"],
       "output_encoding": "json",
       "backend": [
         {
@@ -171,11 +212,57 @@
     {
       "endpoint": "/api/v1/orders/{id}/status",
       "method": "PATCH",
+      "input_headers": ["*"],
       "output_encoding": "no-op",
       "backend": [
         {
           "url_pattern": "/api/v1/orders/{id}/status",
           "encoding": "no-op",
+          "host": [
+            "http://order-service:8080"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/welcome/auth",
+      "method": "GET",
+      "input_headers": ["*"],
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "json",
+          "host": [
+            "http://auth-service:8080"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/welcome/product",
+      "method": "GET",
+      "input_headers": ["*"],
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "json",
+          "host": [
+            "http://product-service:8080"
+          ]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/welcome/order",
+      "method": "GET",
+      "input_headers": ["*"],
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "json",
           "host": [
             "http://order-service:8080"
           ]

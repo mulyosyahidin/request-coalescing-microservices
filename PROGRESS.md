@@ -89,20 +89,20 @@
 ## Fase 3: Implementasi API Gateway & Microservices
 
 ### 3.1 Auth Service — Implementasi Penuh
-- [ ] **Database**
-  - [ ] Migration: Create `users` table
-  - [ ] Repository layer (CRUD user)
-- [ ] **Business Logic**
-  - [ ] Register: validasi input, hash password, simpan user
-  - [ ] Login: verifikasi credentials, generate JWT
-  - [ ] Token validation: parse & verify JWT
-- [ ] **HTTP Handlers**
-  - [ ] `POST /api/v1/auth/register`
-  - [ ] `POST /api/v1/auth/login`
-  - [ ] `POST /internal/auth/validate`
-- [ ] **Middleware**
-  - [ ] Request logging middleware
-  - [ ] CORS middleware
+- [x] **Database**
+  - [x] Migration: Create `users` table
+  - [x] Repository layer (CRUD user)
+- [x] **Business Logic**
+  - [x] Register: validasi input, hash password, simpan user
+  - [x] Login: verifikasi credentials, generate JWT
+  - [x] Token validation: parse & verify JWT
+- [x] **HTTP Handlers**
+  - [x] `POST /api/v1/auth/register`
+  - [x] `POST /api/v1/auth/login`
+  - [x] `POST /internal/auth/validate` (Digantikan oleh GET /me)
+- [x] **Middleware**
+  - [x] Request logging middleware
+  - [ ] CORS middleware (Di-handle oleh KrakenD)
 - [ ] **Testing**
   - [ ] Unit tests untuk service layer
   - [ ] Unit tests untuk repository layer

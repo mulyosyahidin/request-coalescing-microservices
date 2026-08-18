@@ -127,16 +127,26 @@ RequestCoalescing/
 - **Versioning:** Prefix `/api/v1/`.
 - **Format:** JSON (Content-Type: `application/json`).
 - **HTTP status codes:** Gunakan semantik yang benar (200, 201, 400, 401, 403, 404, 500).
-- **Error response format:**
-  ```json
-  {
-    "error": {
-      "code": "PRODUCT_NOT_FOUND",
-      "message": "Product with ID 42 not found"
+- **Response format standar:**
+  - **Success:**
+    ```json
+    {
+      "success": true,
+      "message": "Product retrieved successfully",
+      "data": { ... }
     }
-  }
-  ```
-- **Pagination:** Query params `?page=1&limit=20`, response include `total`, `page`, `limit`.
+    ```
+  - **Error:**
+    ```json
+    {
+      "success": false,
+      "message": "Product with ID 42 not found",
+      "error": {
+        "code": "PRODUCT_NOT_FOUND"
+      }
+    }
+    ```
+- **Pagination:** Query params `?page=1&limit=20`, response include `total`, `page`, `limit` di dalam objek `data`.
 - **Authentication:** Bearer JWT token via `Authorization` header.
 
 ### 5.3. KrakenD API Gateway
@@ -230,6 +240,9 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
 11. **Sertakan `role` di JWT claims** — setiap token yang diterbitkan auth-service wajib mengandung field `role` (`admin` atau `customer`).
 12. **Validasi otorisasi di DUA layer** — gateway (KrakenD) DAN service handler/middleware. Jangan hanya mengandalkan satu layer.
 13. **Filter data berdasarkan ownership** — order-service harus memfilter data berdasarkan `user_id` dari JWT `sub` untuk role `customer`. Admin boleh melihat semua data.
+14. **Format Response Standar** — Semua endpoint di seluruh service WAJIB mengembalikan JSON dengan envelope standar:
+    - **Sukses:** `{"success": true, "message": "string", "data": { ... }}`
+    - **Gagal/Error:** `{"success": false, "message": "string", "error": { "code": "ERROR_CODE" }}`
 
 ### 6.2. DILARANG
 
@@ -242,6 +255,7 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
 7. ❌ Jangan izinkan endpoint yang memerlukan role `admin` bisa diakses oleh `customer` — selalu cek role di middleware.
 8. ❌ Jangan hardcode role di kode — gunakan constant atau enum. Jangan gunakan string literal `"admin"` / `"customer"` tersebar di banyak tempat.
 9. ❌ Jangan izinkan registrasi publik menghasilkan role `admin` — admin hanya melalui seed atau endpoint internal.
+10. ❌ Jangan mengembalikan response mentah/non-JSON (misal plain text `http.Error` bawaan Go) — semua response wajib JSON ber-envelope standar.
 
 ### 6.3. PRIORITAS KEPUTUSAN
 

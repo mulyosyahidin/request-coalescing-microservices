@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 # Stage 1: Builder
 # ------------------------------------------------------------------------------
-FROM golang:1.23-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 # Install SSL CA certificates dan tzdata
 RUN apk add --no-cache ca-certificates tzdata

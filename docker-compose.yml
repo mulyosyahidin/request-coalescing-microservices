@@ -23,6 +23,19 @@ volumes:
   loki_data:
 
 services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    container_name: swagger-ui
+    restart: unless-stopped
+    ports:
+      - "8089:8080"
+    volumes:
+      - ./openapi.yaml:/openapi.yaml
+    environment:
+      SWAGGER_JSON: /openapi.yaml
+    networks:
+      - rc-network
+
   # ============================================================================
   # 1. Databases (PostgreSQL 16)
   # ============================================================================
