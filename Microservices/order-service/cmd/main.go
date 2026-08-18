@@ -10,6 +10,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -57,6 +59,8 @@ func main() {
 			},
 		})
 	})
+
+	mux.Handle("GET /metrics", promhttp.Handler())
 
 	server := &http.Server{
 		Addr:         ":" + port,

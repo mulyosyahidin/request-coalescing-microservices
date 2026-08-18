@@ -102,7 +102,7 @@
   - [x] `POST /internal/auth/validate` (Digantikan oleh GET /me)
 - [x] **Middleware**
   - [x] Request logging middleware
-  - [ ] CORS middleware (Di-handle oleh KrakenD)
+  - [x] CORS middleware
 - [ ] **Testing**
   - [ ] Unit tests untuk service layer
   - [ ] Unit tests untuk repository layer
@@ -162,7 +162,7 @@
 - [ ] **Konfigurasi Dasar**
   - [ ] `krakend.json` dengan route mapping semua endpoint
   - [ ] JWT validation pada endpoint yang memerlukan auth
-  - [ ] CORS configuration
+  - [x] CORS configuration
   - [ ] Rate limiting
   - [ ] Timeout & circuit breaker per backend
 - [ ] **Konfigurasi Coalescing**
@@ -197,35 +197,35 @@
 
 ---
 
-## Fase 4: Observability Stack
+## Fase 4: Observability Stack ✅
 
 ### 4.1 Prometheus
-- [ ] Buat `prometheus.yml` — scrape config untuk semua services
-  - [ ] auth-service
-  - [ ] product-service
-  - [ ] order-service
-  - [ ] KrakenD
-- [ ] Verifikasi semua target UP di Prometheus UI
+- [x] Buat `prometheus.yml` — scrape config untuk semua services
+  - [x] auth-service
+  - [x] product-service
+  - [x] order-service
+  - [x] KrakenD
+- [x] Verifikasi semua target UP di Prometheus UI
 
 ### 4.2 Grafana Dashboard
-- [ ] Buat provisioning datasource (Prometheus, Loki)
-- [ ] Buat provisioning dashboard config
-- [ ] Buat dashboard `request-coalescing.json` untuk eksperimen
-- [ ] Buat dashboard per-service (latency, throughput, error rate)
-- [ ] Buat dashboard infrastructure (CPU, memory per container)
-- [ ] Verifikasi provisioning otomatis datasource & dashboard
+- [x] Buat provisioning datasource (Prometheus, Loki)
+- [x] Buat provisioning dashboard config
+- [x] Buat dashboard `request-coalescing.json` untuk eksperimen
+- [x] Buat dashboard per-service (latency, throughput, error rate)
+- [x] Buat dashboard infrastructure (CPU, memory per container)
+- [x] Verifikasi provisioning otomatis datasource & dashboard
 
 ### 4.3 Loki + Alloy
-- [ ] Setup Loki untuk log aggregation
-- [ ] Setup Alloy sebagai log collector dari semua container
-- [ ] Konfigurasi Grafana datasource untuk Loki
-- [ ] Verifikasi log bisa diquery dari Grafana Explore
-- [ ] Tambahkan Loki & Alloy ke docker-compose
+- [x] Setup Loki untuk log aggregation
+- [x] Setup Alloy sebagai log collector dari semua container
+- [x] Konfigurasi Grafana datasource untuk Loki
+- [x] Verifikasi log bisa diquery dari Grafana Explore
+- [x] Tambahkan Loki & Alloy ke docker-compose
 
 ### 4.4 Integrasi End-to-End Observability
-- [ ] Verifikasi metrics dari semua service terlihat di Grafana
-- [ ] Verifikasi log dari semua service terlihat di Grafana (Loki)
-- [ ] Correlate metrics dengan logs (filter by service, time range)
+- [x] Verifikasi metrics dari semua service terlihat di Grafana
+- [x] Verifikasi log dari semua service terlihat di Grafana (Loki)
+- [x] Correlate metrics dengan logs (filter by service, time range)
 
 ---
 
@@ -326,8 +326,8 @@
 | ---- | ---------------------------------- | ---------- | ------ |
 | 1    | Perencanaan & Inisialisasi         | ✅ Selesai  | ✅     |
 | 2    | Setup Skeleton & Boilerplate       | —          | ⬜     |
-| 3    | Implementasi API Gateway & Service | —          | ⬜     |
-| 4    | Observability Stack                | —          | ⬜     |
+| 3    | Implementasi API Gateway & Service | —          | 🔄     |
+| 4    | Observability Stack                | ✅ Selesai  | ✅     |
 | 5    | Load Testing & Eksperimen         | —          | ⬜     |
 | 6    | Deployment ke GKE                  | —          | ⬜     |
 

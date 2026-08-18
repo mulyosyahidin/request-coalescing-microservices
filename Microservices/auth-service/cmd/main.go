@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"auth-service/internal/config"
 	"auth-service/internal/handler"
@@ -64,6 +65,7 @@ func main() {
 			"service": "auth-service",
 		})
 	})
+	r.Handle("/metrics", promhttp.Handler())
 
 	r.Route("/api/v1/auth", func(r chi.Router) {
 		r.Post("/register", authHandler.HandleRegister)

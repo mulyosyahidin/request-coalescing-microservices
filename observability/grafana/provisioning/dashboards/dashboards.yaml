@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: "Request Coalescing Dashboards"
+    orgId: 1
+    folder: "E-Commerce Microservices"
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
