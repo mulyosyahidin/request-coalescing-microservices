@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { cookies } from "next/headers";
+import { decodeJwt } from "jose";
 import { logoutAction } from "./actions/auth";
 
 export const metadata: Metadata = {
@@ -18,6 +19,18 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   const isAuthenticated = !!token;
+  
+  let role = "customer";
+  if (token) {
+    try {
+      const payload = decodeJwt(token);
+      role = payload.role as string || "customer";
+    } catch (e) {
+      // ignore
+    }
+  }
+  
+  const dashboardLink = role === "admin" ? "/admin/dashboard" : "/customer/dashboard";
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -64,7 +77,7 @@ export default async function RootLayout({
                   {isAuthenticated ? (
                     <>
                       <a
-                        href="/customer/dashboard"
+                        href={dashboardLink}
                         className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                       >
                         Dashboard
@@ -116,7 +129,7 @@ export default async function RootLayout({
                 <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
                   <a href="/products" className="hover:text-indigo-600 transition">Products</a>
                   {isAuthenticated ? (
-                    <a href="/customer/dashboard" className="hover:text-indigo-600 transition">Dashboard</a>
+                    <a href={dashboardLink} className="hover:text-indigo-600 transition">Dashboard</a>
                   ) : (
                     <>
                       <a href="/login" className="hover:text-indigo-600 transition">Login</a>

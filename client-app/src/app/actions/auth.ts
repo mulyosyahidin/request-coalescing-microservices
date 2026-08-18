@@ -35,6 +35,7 @@ export async function registerAction(prevState: any, formData: FormData) {
       
       const payload = decodeJwt(token);
       const expiresAt = new Date((payload.exp || 0) * 1000);
+      const role = payload.role as string;
 
       (await cookies()).set("token", token, {
         httpOnly: true,
@@ -44,7 +45,7 @@ export async function registerAction(prevState: any, formData: FormData) {
         path: "/",
       });
 
-      return { success: true };
+      return { success: true, role };
     }
 
     return { error: "No token received", fields };
@@ -78,6 +79,7 @@ export async function loginAction(prevState: any, formData: FormData) {
       
       const payload = decodeJwt(token);
       const expiresAt = new Date((payload.exp || 0) * 1000);
+      const role = payload.role as string;
 
       (await cookies()).set("token", token, {
         httpOnly: true,
@@ -87,7 +89,7 @@ export async function loginAction(prevState: any, formData: FormData) {
         path: "/",
       });
 
-      return { success: true };
+      return { success: true, role };
     }
 
     return { error: "No token received", fields };

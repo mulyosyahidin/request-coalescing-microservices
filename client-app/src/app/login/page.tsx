@@ -10,7 +10,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (state?.success) {
-      router.push("/customer/dashboard");
+      if (state.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/customer/dashboard");
+      }
     }
   }, [state, router]);
 
