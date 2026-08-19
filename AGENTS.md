@@ -1,7 +1,7 @@
 # AGENTS.md — Panduan AI Agent untuk Proyek RequestCoalescing
 
-> **Terakhir diperbarui:** 2026-08-18 (RBAC update)
-> **Status:** Fase Perencanaan (Fase 1)
+> **Terakhir diperbarui:** 2026-08-19 (order-service & payment-service update)
+> **Status:** Fase Implementasi (Fase 3)
 
 ---
 
@@ -19,7 +19,7 @@ Mengukur dan membandingkan dampak fitur *request coalescing* (concurrent request
 | Layer              | Teknologi                      | Catatan                                           |
 | ------------------ | ------------------------------ | ------------------------------------------------- |
 | API Gateway        | **KrakenD**                    | Konfigurasi coalescing & non-coalescing           |
-| Microservices      | **Go (Golang)**                | auth-service, product-service      |
+| Microservices      | **Go (Golang)**                | auth-service, product-service, order-service, payment-service |
 | Client Application | **Next.js**                    | SSR/CSR frontend (Runtime & PM: **Bun**)          |
 | Load Testing       | **K6 (Grafana)**               | Skenario hot-key burst dan load test              |
 | Observability      | **Grafana, Prometheus, Loki, Alloy** | Metrics, logs, dan tracing                  |
@@ -39,6 +39,8 @@ RequestCoalescing/
 ├── microservices/
 │   ├── auth-service/       # Autentikasi & otorisasi (JWT)
 │   ├── product-service/    # CRUD produk & cache layer
+│   ├── order-service/      # Manajemen pesanan (orders)
+│   └── payment-service/    # Pembayaran via Midtrans Snap
 ├── observability/
 │   ├── grafana/            # Dashboard & provisioning
 │   │   ├── dashboards/     # JSON dashboard (request-coalescing.json, dll)
@@ -64,20 +66,27 @@ RequestCoalescing/
                     ┌──────▼──────┐
                     │ API Gateway │
                     │  (KrakenD)  │
-                    └──┬───┬───┬──┘
-                       │   │   │
-            ┌──────────┘   │   └──────────┐
-            │              │              │
-     ┌──────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐
-     │ auth-service│ │ product- │ │ order-      │
-     │   (Go)      │ │ service  │ │ service     │
-     │             │ │   (Go)   │ │   (Go)      │
-     └──────┬──────┘ └────┬─────┘ └──────┬──────┘
-            │              │              │
-     ┌──────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐
-     │ PostgreSQL  │ │PostgreSQL│ │ PostgreSQL  │
-     │ (auth_db)   │ │(product) │ │ (order_db)  │
-     └─────────────┘ └──────────┘ └─────────────┘
+                    └──┬──┬──┬──┬─┘
+                       │  │  │  │
+            ┌──────────┘  │  │  └──────────┐
+            │             │  │             │
+     ┌──────▼──────┐ ┌───▼──▼───┐  ┌──────▼──────┐
+     │ auth-service│ │ product- │  │   order-    │
+     │   (Go)      │ │ service  │  │  service    │
+     │             │ │   (Go)   │  │   (Go)      │
+     └──────┬──────┘ └────┬─────┘  └──┬─────┬────┘
+            │             │           │     │
+            │             │           │     │ HTTP
+            │             │           │     ▼
+     ┌──────▼──────┐ ┌────▼─────┐  ┌─▼────────────┐     ┌──────────┐
+     │ PostgreSQL  │ │PostgreSQL│  │payment-service│────►│ Midtrans │
+     │ (auth_db)   │ │(product) │  │   (Go)        │◄────│  (Snap)  │
+     └─────────────┘ └──────────┘  └──┬─────┬──────┘     └──────────┘
+                                      │     │                Webhook
+                               ┌──────▼┐ ┌──▼────────┐
+                               │ PgSQL │ │  PgSQL    │
+                               │(order)│ │ (payment) │
+                               └───────┘ └───────────┘
 
      ┌────────────────────────────────────────────┐
      │            Observability Layer              │
@@ -182,8 +191,8 @@ Proyek ini menerapkan **Role-Based Access Control (RBAC) sederhana** dengan dua 
 
 | Role       | Deskripsi                                                                                      |
 | ---------- | ---------------------------------------------------------------------------------------------- |
-| `admin`    | Akses penuh: CRUD produk.      |
-| `customer` | Akses terbatas: registrasi/login, lihat produk (read-only).|
+| `admin`    | Akses penuh: CRUD produk, kelola semua order, lihat semua payment.                             |
+| `customer` | Akses terbatas: registrasi/login, lihat produk (read-only), buat & lihat order sendiri, bayar. |
 
 #### JWT Claims (Payload)
 
@@ -214,6 +223,8 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
    - **Setiap service WAJIB memvalidasi role di handler/middleware sendiri**, tidak boleh hanya mengandalkan gateway.
    - auth-service: Assign role `customer` sebagai default saat registrasi. Admin dibuat melalui seed data atau endpoint internal.
    - product-service: Endpoint write (`POST`, `PUT`, `DELETE`) hanya bisa diakses oleh role `admin`. Endpoint read (`GET`) bersifat public.
+   - order-service: Customer hanya bisa membuat dan melihat order miliknya sendiri (`user_id` dari JWT `sub`). Admin bisa lihat semua order dan update status.
+   - payment-service: Customer hanya bisa lihat payment miliknya. Webhook Midtrans diverifikasi via signature (bukan JWT).
 
 #### Default Role & Admin Provisioning
 - User baru yang registrasi via `POST /api/v1/auth/register` **selalu mendapat role `customer`**.
@@ -289,6 +300,16 @@ Referensikan `.env.example` untuk template. Setiap service membutuhkan minimal:
 - **Service discovery (Kubernetes):** Gunakan Kubernetes Service DNS (e.g., `http://product-service.request-coalescing.svc.cluster.local`).
 - **Tidak ada message broker** di tahap awal. Jika diperlukan event-driven, diskusikan terlebih dahulu.
 
+### Pola Komunikasi Antar Service
+
+```
+order-service  ──► product-service     GET /api/v1/products/:id  (validasi produk & harga)
+order-service  ──► payment-service     POST /api/v1/payments     (create payment)
+payment-service ──► order-service      POST /internal/orders/:id/payment-status (callback)
+payment-service ──► Midtrans (external) POST /snap/v1/transactions (create Snap token)
+Midtrans        ──► payment-service    POST /api/v1/payments/notification (webhook)
+```
+
 ---
 
 ## 9. Konteks Eksperimen Request Coalescing
@@ -318,3 +339,5 @@ Ketika banyak client mengirim request identik (same endpoint, same params) secar
 - [Standard Go Project Layout](https://github.com/golang-standards/project-layout)
 - [K6 Documentation](https://grafana.com/docs/k6/latest/)
 - [Grafana Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/)
+- [Midtrans Snap Documentation](https://docs.midtrans.com/docs/snap-integration)
+- [Midtrans Sandbox Testing](https://docs.midtrans.com/docs/testing-payment-on-sandbox)

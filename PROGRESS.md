@@ -1,6 +1,6 @@
 # PROGRESS.md — Roadmap & Checklist Pengembangan
 
-> **Terakhir diperbarui:** 2026-08-18
+> **Terakhir diperbarui:** 2026-08-19
 > **Penanggung jawab update:** AI Agent / Developer
 
 ---
@@ -24,6 +24,8 @@
   - [x] `/load-testing`
   - [x] `/microservices/auth-service`
   - [x] `/microservices/product-service`
+  - [x] `/microservices/order-service`
+  - [x] `/microservices/payment-service`
   - [x] `/observability/grafana`
   - [x] `/observability/prometheus`
 - [x] Membuat `.gitignore`
@@ -62,6 +64,22 @@
   - [x] Health check endpoint (`GET /health`)
   - [x] Metrics endpoint (`GET /metrics`)
   - [x] Dockerfile (multi-stage build)
+- [ ] **Order Service**
+  - [ ] Inisialisasi Go module (`go mod init`)
+  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
+  - [ ] Entry point `cmd/main.go` dengan HTTP server dasar
+  - [ ] Konfigurasi loader (env vars)
+  - [ ] Health check endpoint (`GET /health`)
+  - [ ] Metrics endpoint (`GET /metrics`)
+  - [ ] Dockerfile (multi-stage build)
+- [ ] **Payment Service**
+  - [ ] Inisialisasi Go module (`go mod init`)
+  - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`)
+  - [ ] Entry point `cmd/main.go` dengan HTTP server dasar
+  - [ ] Konfigurasi loader (env vars)
+  - [ ] Health check endpoint (`GET /health`)
+  - [ ] Metrics endpoint (`GET /metrics`)
+  - [ ] Dockerfile (multi-stage build)
 
 ### 2.2 Client Application Skeleton
 - [x] Inisialisasi Next.js project (`npx create-next-app@latest`)
@@ -75,6 +93,8 @@
   - [x] KrakenD service
   - [x] auth-service + auth-db (PostgreSQL)
   - [x] product-service + product-db (PostgreSQL)
+  - [ ] order-service + order-db (PostgreSQL)
+  - [ ] payment-service + payment-db (PostgreSQL)
   - [x] Prometheus
   - [x] Grafana
   - [x] Loki + Alloy
@@ -170,8 +190,10 @@
   - [x] Product Detail page
   - [x] Login & Register page
   - [ ] Cart page (client-side state)
-  - [ ] Checkout page
+  - [ ] Checkout page (integrasi Midtrans Snap)
   - [x] Admin Dashboard (CRUD Products)
+  - [ ] Order History page (customer: own orders)
+  - [ ] Admin: All Orders page (admin: semua order)
 - [x] **Auth Integration**
   - [x] Login/Register flow dengan JWT
   - [x] Protected routes (redirect ke login)
@@ -182,6 +204,85 @@
 - [ ] **Dockerfile**
   - [ ] Multi-stage build untuk Next.js
 
+### 3.5 Order Service — Implementasi Penuh
+- [ ] **Database**
+  - [ ] Migration: Create `orders` table
+  - [ ] Migration: Create `order_items` table
+  - [ ] Repository layer (CRUD orders + order items, interface + PostgreSQL implementation)
+- [ ] **Business Logic**
+  - [ ] Create order: validasi items, snapshot harga/nama dari product-service, hitung total
+  - [ ] Get order by ID: ownership check (customer hanya bisa lihat miliknya)
+  - [ ] List orders: customer filtered by user_id, admin lihat semua (pagination)
+  - [ ] Update order status: admin only, validasi status transition
+  - [ ] Inter-service call ke product-service (validasi produk & harga)
+  - [ ] Inter-service call ke payment-service (create payment, terima callback)
+- [ ] **HTTP Handlers**
+  - [ ] `POST /api/v1/orders` — Create order [AUTH]
+  - [ ] `GET /api/v1/orders` — List orders [AUTH] (customer: own, admin: all)
+  - [ ] `GET /api/v1/orders/:id` — Get order detail [AUTH] (customer: own only)
+  - [ ] `PATCH /api/v1/orders/:id/status` — Update status [AUTH, ADMIN]
+  - [ ] `POST /internal/orders/:id/payment-status` — Callback dari payment-service (internal)
+- [ ] **Custom Prometheus Metrics**
+  - [ ] `order_created_total` (counter)
+  - [ ] `order_status_changes_total` (counter, label: from_status, to_status)
+  - [ ] `order_handler_duration_seconds` (histogram, label: method, route)
+  - [ ] `order_db_queries_total` (counter, label: operation)
+- [ ] **Middleware**
+  - [ ] Auth middleware (JWT validation — parse token, extract user_id & role)
+  - [ ] RequireRole middleware (admin-only endpoints)
+  - [ ] CORS middleware
+- [ ] **Testing**
+  - [ ] Unit tests untuk service layer (create order, ownership check, status transition)
+  - [ ] Unit tests untuk repository layer
+  - [ ] Unit tests untuk handler layer
+  - [ ] Integration test (E2E create order flow)
+
+### 3.6 Payment Service — Implementasi Penuh
+- [ ] **Database**
+  - [ ] Migration: Create `payments` table
+  - [ ] Repository layer (CRUD payments, interface + PostgreSQL implementation)
+- [ ] **Business Logic**
+  - [ ] Create payment: generate Midtrans Snap token via Snap API
+  - [ ] Handle Midtrans webhook notification (signature verification)
+  - [ ] Get payment status by ID / by order_id
+  - [ ] Update payment status berdasarkan Midtrans notification
+  - [ ] Callback ke order-service saat status berubah (settlement → update order ke paid)
+- [ ] **HTTP Handlers**
+  - [ ] `POST /api/v1/payments` — Create payment (internal, dari order-service)
+  - [ ] `GET /api/v1/payments/:id` — Get payment detail [AUTH]
+  - [ ] `GET /api/v1/payments/order/:orderId` — Get payment by order ID [AUTH]
+  - [ ] `POST /api/v1/payments/notification` — Midtrans webhook callback (public, verified by signature)
+- [ ] **Midtrans Integration**
+  - [ ] HTTP client untuk Midtrans Snap API (`POST /snap/v1/transactions`)
+  - [ ] Signature verification untuk webhook (SHA512)
+  - [ ] Mapping Midtrans transaction_status ke internal payment status
+- [ ] **Custom Prometheus Metrics**
+  - [ ] `payment_created_total` (counter)
+  - [ ] `payment_status_changes_total` (counter, label: status)
+  - [ ] `payment_webhooks_received_total` (counter, label: transaction_status)
+  - [ ] `payment_handler_duration_seconds` (histogram, label: method, route)
+- [ ] **Middleware**
+  - [ ] Auth middleware (JWT validation — parse token, extract user_id & role)
+  - [ ] CORS middleware
+- [ ] **Testing**
+  - [ ] Unit tests untuk service layer (create payment, webhook handling, signature verification)
+  - [ ] Unit tests untuk repository layer
+  - [ ] Unit tests untuk handler layer
+  - [ ] Integration test (mock Midtrans API)
+
+### 3.7 KrakenD — Update Route Mapping
+- [ ] Tambah route order-service endpoints ke `krakend.json`
+- [ ] Tambah route payment-service endpoints ke `krakend.json`
+  - [ ] `POST /api/v1/payments/notification` — public (webhook Midtrans)
+  - [ ] `GET /api/v1/payments/order/{orderId}` — [AUTH]
+- [ ] Verifikasi routing untuk semua endpoint baru
+
+### 3.8 Infrastructure Updates
+- [ ] Update `docker-compose.yml` — tambah order-db, payment-db, order-service, payment-service
+- [ ] Update `.env.example` — tambah env vars untuk order & payment service + Midtrans keys
+- [ ] Update `prometheus.yml` — tambah scrape target order-service & payment-service
+- [ ] Update dokumentasi (AGENTS.md, FEATURES.md)
+
 ---
 
 ## Fase 4: Observability Stack ✅
@@ -190,6 +291,8 @@
 - [x] Buat `prometheus.yml` — scrape config untuk semua services
   - [x] auth-service
   - [x] product-service
+  - [ ] order-service
+  - [ ] payment-service
   - [x] KrakenD
 - [x] Verifikasi semua target UP di Prometheus UI
 
@@ -224,7 +327,7 @@
 
 ### 5.2 Pengembangan Skenario K6 Tambahan
 - [ ] `mixed-product-traffic.js` — request ke berbagai produk (Zipfian distribution)
-- [ ] `full-user-journey.js` — Register → Login → Browse → Cart → Checkout
+- [ ] `full-user-journey.js` — Register → Login → Browse → Cart → Checkout → Payment
 - [ ] `auth-stress.js` — burst login request
 - [ ] `sustained-load.js` — ramp-up gradual untuk menemukan titik saturasi
 
@@ -260,14 +363,16 @@
 
 ### 6.2 Manifest Kubernetes
 - [ ] **Database**
-  - [ ] PostgreSQL StatefulSet (atau Cloud SQL) untuk setiap service
+  - [ ] PostgreSQL StatefulSet (atau Cloud SQL) untuk setiap service (4 database)
   - [ ] PersistentVolumeClaim untuk data PostgreSQL
   - [ ] Secrets untuk database credentials
 - [ ] **Microservices**
   - [ ] Deployment + Service untuk auth-service
   - [ ] Deployment + Service untuk product-service
+  - [ ] Deployment + Service untuk order-service
+  - [ ] Deployment + Service untuk payment-service
   - [ ] ConfigMap untuk environment variables
-  - [ ] Secrets untuk JWT secret, dll
+  - [ ] Secrets untuk JWT secret, Midtrans keys, dll
 - [ ] **API Gateway**
   - [ ] Deployment + Service untuk KrakenD
   - [ ] ConfigMap untuk `krakend.json`
@@ -282,6 +387,8 @@
 - [ ] **Autoscaling**
   - [ ] HPA untuk product-service
   - [ ] HPA untuk auth-service
+  - [ ] HPA untuk order-service
+  - [ ] HPA untuk payment-service
   - [ ] HPA untuk KrakenD
 
 ### 6.3 CI/CD (Opsional)
