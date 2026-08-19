@@ -1,0 +1,82 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "K6 Request Rate (Throughput)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "rate(k6_http_reqs_total[$__rate_interval])",
+          "legendFormat": "Req/s"
+        }
+      ]
+    },
+    {
+      "title": "K6 Request Duration (Latency p99)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "k6_http_req_duration_p99",
+          "legendFormat": "p99 Latency (ms)"
+        }
+      ]
+    },
+    {
+      "title": "Database Queries (Product Service)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(product_db_queries_total{operation=\"select_one\"}[$__rate_interval]))",
+          "legendFormat": "DB Query (select_one)"
+        }
+      ]
+    },
+    {
+      "title": "API Gateway Load (KrakenD)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(opencensus_io_http_server_request_count[$__rate_interval]))",
+          "legendFormat": "KrakenD requests"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["k6", "load-test"],
+  "templating": { "list": [] },
+  "time": { "from": "now-5m", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Load Testing: Product Detail",
+  "uid": "k6-product-detail",
+  "version": 1
+}

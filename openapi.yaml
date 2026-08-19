@@ -222,6 +222,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/BaseSuccessResponse'
 
+  /products/{id}/coalesced:
+    get:
+      summary: Get a product by ID with Request Coalescing (Simulated Slow Backend)
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Product found (coalesced)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          description: Product not found
+
   /products/upload:
     post:
       summary: Upload a product photo

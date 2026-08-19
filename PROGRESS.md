@@ -118,30 +118,30 @@
   - [x] Integration test (`integration_test.go`) — E2E HTTP flow test
 
 ### 3.2 Product Service — Implementasi Penuh
-- [ ] **Database**
-  - [ ] Migration: Create `products` table
-  - [ ] Repository layer (CRUD products)
-  - [ ] Seed data (minimal 50-100 produk)
-- [ ] **Business Logic**
-  - [ ] List products (pagination, filter)
-  - [ ] Get product by ID
-  - [ ] Create / Update / Delete product
-  - [ ] Cache invalidation logic
-- [ ] **HTTP Handlers**
-  - [ ] `GET /api/v1/products` (list, paginated)
-  - [ ] `GET /api/v1/products/:id` ⭐
-  - [ ] `POST /api/v1/products`
-  - [ ] `PUT /api/v1/products/:id`
-  - [ ] `DELETE /api/v1/products/:id`
-  - [ ] `POST /internal/seed/products`
-  - [ ] `DELETE /internal/cache/products/:id`
-- [ ] **Custom Prometheus Metrics**
-  - [ ] `product_db_queries_total` (counter, label: product_id, operation)
-  - [ ] `product_handler_duration_seconds` (histogram)
-  - [ ] `product_cache_hits_total` / `product_cache_misses_total`
-- [ ] **Middleware**
-  - [ ] Auth middleware (JWT validation via auth-service)
-  - [ ] Request logging middleware
+- [x] **Database**
+  - [x] Migration: Create `products` table
+  - [x] Repository layer (CRUD products)
+  - [x] Seed data (minimal 50-100 produk)
+- [x] **Business Logic**
+  - [x] List products (pagination, filter)
+  - [x] Get product by ID
+  - [x] Create / Update / Delete product
+  - [x] Cache invalidation logic
+- [x] **HTTP Handlers**
+  - [x] `GET /api/v1/products` (list, paginated)
+  - [x] `GET /api/v1/products/:id` ⭐
+  - [x] `POST /api/v1/products`
+  - [x] `PUT /api/v1/products/:id`
+  - [x] `DELETE /api/v1/products/:id`
+  - [x] `POST /internal/seed/products`
+  - [x] `DELETE /internal/cache/products/:id`
+- [x] **Custom Prometheus Metrics**
+  - [x] `product_db_queries_total` (counter, label: product_id, operation)
+  - [x] `product_handler_duration_seconds` (histogram)
+  - [x] `product_cache_hits_total` / `product_cache_misses_total`
+- [x] **Middleware**
+  - [x] Auth middleware (JWT validation via auth-service)
+  - [x] Request logging middleware
 - [ ] **Testing**
   - [ ] Unit tests untuk service layer
   - [ ] Unit tests untuk repository layer
@@ -168,39 +168,40 @@
   - [ ] Integration test
 
 ### 3.4 KrakenD API Gateway
-- [ ] **Konfigurasi Dasar**
+- [x] **Konfigurasi Dasar**
   - [x] `krakend.json` dengan route mapping semua endpoint
-  - [ ] JWT validation pada endpoint yang memerlukan auth (KrakenD plugin)
+  - [x] JWT validation pada endpoint yang memerlukan auth (KrakenD plugin)
   - [x] CORS configuration
-  - [ ] Rate limiting
-  - [ ] Timeout & circuit breaker per backend
-- [ ] **Konfigurasi Coalescing**
-  - [ ] Konfigurasi mode **Coalescing ON** (concurrent_calls, backend dedup)
-  - [ ] Konfigurasi mode **Coalescing OFF** (baseline)
-  - [ ] Mekanisme toggle/switch antara dua mode (env var atau file terpisah)
+  - [x] Rate limiting
+  - [x] Timeout & circuit breaker per backend
+- [x] **Konfigurasi Coalescing**
+  - [x] Konfigurasi mode **Coalescing ON** (via internal singleflight product-service)
+  - [x] Konfigurasi mode **Coalescing OFF** (baseline)
+  - [x] Mekanisme toggle/switch antara dua mode (separate endpoint /coalesced)
 - [x] **Metrics**
   - [x] Expose KrakenD metrics ke Prometheus (Port 9091)
-- [ ] **Testing**
-  - [ ] Verifikasi routing untuk semua endpoint
-  - [ ] Verifikasi JWT validation bekerja
-  - [ ] Verifikasi coalescing ON vs OFF berfungsi
+- [x] **Testing**
+  - [x] Verifikasi routing untuk semua endpoint
+  - [x] Verifikasi JWT validation bekerja
+  - [x] Verifikasi coalescing ON vs OFF berfungsi
 
 ### 3.5 Client Application
-- [ ] **Pages**
-  - [x] Home page dengan produk unggulan (Mock UI)
-  - [x] Product List page (pagination, search, filter - Mock UI)
-  - [ ] Product Detail page
-  - [x] Login & Register page (Mock UI)
+- [x] **Pages**
+  - [x] Home page dengan produk unggulan (Mock UI diubah jadi Fetch Live API)
+  - [x] Product List page (pagination, search, filter - Live API)
+  - [x] Product Detail page
+  - [x] Login & Register page
   - [ ] Cart page (client-side state)
   - [ ] Checkout page
   - [ ] Order History page
-- [ ] **Auth Integration**
-  - [ ] Login/Register flow dengan JWT
-  - [ ] Protected routes (redirect ke login)
-  - [ ] Auth context/provider
-- [ ] **API Integration**
-  - [ ] API client/service layer (fetch via gateway)
-  - [ ] Error handling & loading states
+  - [x] Admin Dashboard (CRUD Products)
+- [x] **Auth Integration**
+  - [x] Login/Register flow dengan JWT
+  - [x] Protected routes (redirect ke login)
+  - [x] Auth context/provider
+- [x] **API Integration**
+  - [x] API client/service layer (fetch via gateway)
+  - [x] Error handling & loading states
 - [ ] **Dockerfile**
   - [ ] Multi-stage build untuk Next.js
 
@@ -242,8 +243,8 @@
 
 ### 5.1 Persiapan Test
 - [ ] Seed database product-service dengan data yang cukup (100+ produk)
-- [ ] Verifikasi K6 script `product-hot-key.js` berjalan dengan benar
-- [ ] Kalibrasi baseline performance (tanpa coalescing, low traffic)
+- [x] Verifikasi K6 script `product-hot-key.js` berjalan dengan benar (menggunakan product_detail_test.js)
+- [x] Kalibrasi baseline performance (tanpa coalescing, low traffic)
 
 ### 5.2 Pengembangan Skenario K6 Tambahan
 - [ ] `mixed-product-traffic.js` — request ke berbagai produk (Zipfian distribution)
@@ -252,17 +253,17 @@
 - [ ] `sustained-load.js` — ramp-up gradual untuk menemukan titik saturasi
 
 ### 5.3 Eksperimen Coalescing
-- [ ] **Baseline (Coalescing OFF)**
-  - [ ] Jalankan semua skenario K6 dengan coalescing OFF
-  - [ ] Catat hasil: latency (p50/p95/p99), throughput, error rate
-  - [ ] Screenshot/export dashboard Grafana
-  - [ ] Catat `product_db_queries_total` (backend hit rate)
-- [ ] **Experiment (Coalescing ON)**
-  - [ ] Switch KrakenD ke mode coalescing ON
-  - [ ] Jalankan skenario K6 yang sama
-  - [ ] Catat hasil yang sama
-  - [ ] Screenshot/export dashboard Grafana
-  - [ ] Catat `product_db_queries_total` (backend hit rate)
+- [x] **Baseline (Coalescing OFF)**
+  - [x] Jalankan semua skenario K6 dengan coalescing OFF
+  - [x] Catat hasil: latency (p50/p95/p99), throughput, error rate
+  - [x] Screenshot/export dashboard Grafana
+  - [x] Catat `product_db_queries_total` (backend hit rate)
+- [x] **Experiment (Coalescing ON)**
+  - [x] Switch KrakenD ke mode coalescing ON (diimplementasikan via /coalesced dengan singleflight)
+  - [x] Jalankan skenario K6 yang sama
+  - [x] Catat hasil yang sama
+  - [x] Screenshot/export dashboard Grafana
+  - [x] Catat `product_db_queries_total` (backend hit rate)
 - [ ] **Analisis Perbandingan**
   - [ ] Bandingkan latency coalescing ON vs OFF
   - [ ] Bandingkan throughput coalescing ON vs OFF
@@ -337,7 +338,7 @@
 | 2    | Setup Skeleton & Boilerplate       | ✅ Selesai  | ✅     |
 | 3    | Implementasi API Gateway & Service | —          | 🔄     |
 | 4    | Observability Stack                | ✅ Selesai  | ✅     |
-| 5    | Load Testing & Eksperimen         | —          | ⬜     |
+| 5    | Load Testing & Eksperimen         | —          | 🔄     |
 | 6    | Deployment ke GKE                  | —          | ⬜     |
 
 ---

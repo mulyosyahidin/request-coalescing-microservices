@@ -56,6 +56,31 @@ func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (h *ProductHandler) GetProductByIDCoalescing(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Missing product ID")
+		return
+	}
+
+	if _, err := uuid.Parse(id); err != nil {
+		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Product ID must be a valid UUID")
+		return
+	}
+
+	p, err := h.svc.GetProductByIDWithCoalescing(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, repository.ErrProductNotFound) {
+			RespondError(w, http.StatusNotFound, "NOT_FOUND", "Product not found")
+			return
+		}
+		RespondError(w, http.StatusInternalServerError, "INTERNAL_ERROR", err.Error())
+		return
+	}
+
+	RespondSuccess(w, http.StatusOK, "Product retrieved (coalesced)", p)
+}
+
 func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {

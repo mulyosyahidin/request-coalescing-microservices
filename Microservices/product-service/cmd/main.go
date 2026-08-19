@@ -99,6 +99,7 @@ func main() {
 		// Public
 		r.Get("/", productHandler.GetProducts)
 		r.Get("/{id}", productHandler.GetProductByID)
+		r.Get("/{id}/coalesced", productHandler.GetProductByIDCoalescing)
 
 		// Admin Only
 		r.Group(func(r chi.Router) {

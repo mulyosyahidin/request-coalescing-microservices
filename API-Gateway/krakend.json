@@ -153,14 +153,33 @@
       ]
     },
     {
+      "endpoint": "/api/v1/products/{id}/coalesced",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/products/{id}/coalesced",
+          "encoding": "no-op",
+          "host": [
+            "http://product-service:8080"
+          ]
+        }
+      ]
+    },
+    {
       "endpoint": "/api/v1/products/{id}",
       "method": "GET",
-      "input_headers": ["*"],
-      "output_encoding": "json",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
       "backend": [
         {
           "url_pattern": "/api/v1/products/{id}",
-          "encoding": "json",
+          "encoding": "no-op",
           "host": [
             "http://product-service:8080"
           ]

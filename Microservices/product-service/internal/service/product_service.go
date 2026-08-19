@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"golang.org/x/sync/singleflight"
+
 	"product-service/internal/metrics"
 	"product-service/internal/model"
 	"product-service/internal/repository"
@@ -15,6 +17,7 @@ import (
 type ProductService interface {
 	GetProducts(ctx context.Context, limit, offset int) ([]*model.Product, int, error)
 	GetProductByID(ctx context.Context, id string) (*model.Product, error)
+	GetProductByIDWithCoalescing(ctx context.Context, id string) (*model.Product, error)
 	CreateProduct(ctx context.Context, req *model.CreateProductRequest) (*model.Product, error)
 	UpdateProduct(ctx context.Context, id string, req *model.UpdateProductRequest) (*model.Product, error)
 	DeleteProduct(ctx context.Context, id string) error
@@ -25,6 +28,9 @@ type productServiceImpl struct {
 	repo      repository.ProductRepository
 	s3Storage *storage.S3Storage
 	
+	// Singleflight group for request coalescing at Go level
+	sg singleflight.Group
+
 	// Simple in-memory cache for hot keys (coalescing experiments)
 	// Key: product ID (string), Value: *model.Product
 	cache sync.Map
@@ -65,16 +71,15 @@ func (s *productServiceImpl) GetProducts(ctx context.Context, limit, offset int)
 }
 
 func (s *productServiceImpl) GetProductByID(ctx context.Context, id string) (*model.Product, error) {
-	// 1. Check cache
-	if cachedVal, ok := s.cache.Load(id); ok {
-		p := cachedVal.(*model.Product)
-		// Return a copy so the caller doesn't mutate cache, or re-sign URL
-		pCopy := *p
-		s.mapS3URL(ctx, &pCopy) // Sign URL on the fly
-		slog.Debug("Cache hit for product", "id", id)
-		metrics.ProductCacheHitsTotal.Inc()
-		return &pCopy, nil
-	}
+	// 1. (CACHE DISABLED FOR LOAD TESTING)
+	// if cachedVal, ok := s.cache.Load(id); ok {
+	// 	p := cachedVal.(*model.Product)
+	// 	pCopy := *p
+	// 	s.mapS3URL(ctx, &pCopy) // Sign URL on the fly
+	// 	slog.Debug("Cache hit for product", "id", id)
+	// 	metrics.ProductCacheHitsTotal.Inc()
+	// 	return &pCopy, nil
+	// }
 
 	// 2. Fetch from DB
 	slog.Debug("Cache miss for product", "id", id)
@@ -84,9 +89,9 @@ func (s *productServiceImpl) GetProductByID(ctx context.Context, id string) (*mo
 		return nil, err
 	}
 
-	// 3. Save to cache (cache the DB version, NOT the signed version)
-	pCache := *p
-	s.cache.Store(id, &pCache)
+	// 3. Save to cache (DISABLED FOR LOAD TESTING)
+	// pCache := *p
+	// s.cache.Store(id, &pCache)
 
 	// 4. Return signed version
 	s.mapS3URL(ctx, p)
@@ -152,4 +157,42 @@ func (s *productServiceImpl) DeleteProduct(ctx context.Context, id string) error
 func (s *productServiceImpl) InvalidateCache(id string) {
 	s.cache.Delete(id)
 	slog.Info("Product cache invalidated", "id", id)
+}
+
+func (s *productServiceImpl) GetProductByIDWithCoalescing(ctx context.Context, id string) (*model.Product, error) {
+	// Use singleflight to coalesce concurrent requests for the same product ID
+	key := "product_coalesce_" + id
+	
+	v, err, shared := s.sg.Do(key, func() (interface{}, error) {
+		slog.Debug("Singleflight executed DB query", "id", id)
+		
+		// SIMULASI QUERY BERAT: 
+		// Kita tahan eksekusinya selama 500 milidetik.
+		// Ini memberi waktu bagi request-request lain dari K6 untuk "menumpuk" 
+		// dan digabungkan (coalesced) oleh singleflight.
+		time.Sleep(500 * time.Millisecond)
+		
+		p, err := s.repo.GetProductByID(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		
+		return p, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if shared {
+		slog.Debug("Singleflight coalesced request", "id", id)
+	}
+
+	p := v.(*model.Product)
+	
+	// Create a copy so concurrent readers don't mutate the same object when signing URL
+	pCopy := *p
+	s.mapS3URL(ctx, &pCopy)
+
+	return &pCopy, nil
 }
