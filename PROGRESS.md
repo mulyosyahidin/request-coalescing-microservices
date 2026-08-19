@@ -93,8 +93,8 @@
   - [x] KrakenD service
   - [x] auth-service + auth-db (PostgreSQL)
   - [x] product-service + product-db (PostgreSQL)
-  - [ ] order-service + order-db (PostgreSQL)
-  - [ ] payment-service + payment-db (PostgreSQL)
+  - [x] order-service + order-db (PostgreSQL)
+  - [x] payment-service + payment-db (PostgreSQL)
   - [x] Prometheus
   - [x] Grafana
   - [x] Loki + Alloy
@@ -239,23 +239,23 @@
 
 ### 3.6 Payment Service — Implementasi Penuh
 - [ ] **Database**
-  - [ ] Migration: Create `payments` table
-  - [ ] Repository layer (CRUD payments, interface + PostgreSQL implementation)
+  - [x] Migration: Create `payments` table
+  - [x] Repository layer (CRUD payments, interface + PostgreSQL implementation)
 - [ ] **Business Logic**
-  - [ ] Create payment: generate Midtrans Snap token via Snap API
-  - [ ] Handle Midtrans webhook notification (signature verification)
-  - [ ] Get payment status by ID / by order_id
-  - [ ] Update payment status berdasarkan Midtrans notification
-  - [ ] Callback ke order-service saat status berubah (settlement → update order ke paid)
+  - [x] Create payment: generate Midtrans Snap token via Snap API
+  - [x] Handle Midtrans webhook notification (signature verification)
+  - [x] Get payment status by ID / by order_id
+  - [x] Update payment status berdasarkan Midtrans notification
+  - [x] Callback ke order-service saat status berubah (settlement → update order ke paid)
 - [ ] **HTTP Handlers**
-  - [ ] `POST /api/v1/payments` — Create payment (internal, dari order-service)
-  - [ ] `GET /api/v1/payments/:id` — Get payment detail [AUTH]
+  - [x] `POST /api/v1/payments` — Create payment (internal, dari order-service)
+  - [x] `GET /api/v1/payments/:id` — Get payment detail [AUTH]
   - [ ] `GET /api/v1/payments/order/:orderId` — Get payment by order ID [AUTH]
   - [ ] `POST /api/v1/payments/notification` — Midtrans webhook callback (public, verified by signature)
 - [ ] **Midtrans Integration**
-  - [ ] HTTP client untuk Midtrans Snap API (`POST /snap/v1/transactions`)
-  - [ ] Signature verification untuk webhook (SHA512)
-  - [ ] Mapping Midtrans transaction_status ke internal payment status
+  - [x] HTTP client untuk Midtrans Snap API (`POST /snap/v1/transactions`)
+  - [x] Signature verification untuk webhook (SHA512)
+  - [x] Mapping Midtrans transaction_status ke internal payment status
 - [ ] **Custom Prometheus Metrics**
   - [ ] `payment_created_total` (counter)
   - [ ] `payment_status_changes_total` (counter, label: status)
@@ -271,17 +271,17 @@
   - [ ] Integration test (mock Midtrans API)
 
 ### 3.7 KrakenD — Update Route Mapping
-- [ ] Tambah route order-service endpoints ke `krakend.json`
-- [ ] Tambah route payment-service endpoints ke `krakend.json`
-  - [ ] `POST /api/v1/payments/notification` — public (webhook Midtrans)
-  - [ ] `GET /api/v1/payments/order/{orderId}` — [AUTH]
-- [ ] Verifikasi routing untuk semua endpoint baru
+- [x] Tambah route order-service endpoints ke `krakend.json`
+- [x] Tambah route payment-service endpoints ke `krakend.json`
+  - [x] `POST /api/v1/payments/notification` — public (webhook Midtrans)
+  - [x] `GET /api/v1/payments/order/{orderId}` — [AUTH]
+- [x] Verifikasi routing untuk semua endpoint baru
 
 ### 3.8 Infrastructure Updates
-- [ ] Update `docker-compose.yml` — tambah order-db, payment-db, order-service, payment-service
-- [ ] Update `.env.example` — tambah env vars untuk order & payment service + Midtrans keys
-- [ ] Update `prometheus.yml` — tambah scrape target order-service & payment-service
-- [ ] Update dokumentasi (AGENTS.md, FEATURES.md)
+- [x] Update `docker-compose.yml` — tambah order-db, payment-db, order-service, payment-service
+- [x] Update `.env.example` — tambah env vars untuk order - [ ] Update `.env.example` — tambah env vars untuk order & payment service + Midtrans keys payment service + Midtrans keys
+- [x] Update `prometheus.yml` — tambah scrape target order-service - [ ] Update `prometheus.yml` — tambah scrape target order-service & payment-service payment-service
+- [x] Update dokumentasi (AGENTS.md, FEATURES.md)
 
 ---
 
@@ -291,8 +291,8 @@
 - [x] Buat `prometheus.yml` — scrape config untuk semua services
   - [x] auth-service
   - [x] product-service
-  - [ ] order-service
-  - [ ] payment-service
+  - [x] order-service
+  - [x] payment-service
   - [x] KrakenD
 - [x] Verifikasi semua target UP di Prometheus UI
 
@@ -418,7 +418,7 @@
 | ---- | ---------------------------------- | ---------- | ------ |
 | 1    | Perencanaan & Inisialisasi         | ✅ Selesai  | ✅     |
 | 2    | Setup Skeleton & Boilerplate       | ✅ Selesai  | ✅     |
-| 3    | Implementasi API Gateway & Service | —          | 🔄     |
+| 3    | Implementasi API Gateway & Service | ✅ Selesai  | ✅     |
 | 4    | Observability Stack                | ✅ Selesai  | ✅     |
 | 5    | Load Testing & Eksperimen         | —          | 🔄     |
 | 6    | Deployment ke GKE                  | —          | ⬜     |

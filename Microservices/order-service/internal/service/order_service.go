@@ -1,7 +1,6 @@
 package service
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -121,51 +120,6 @@ func (s *orderService) CreateOrder(ctx context.Context, userID, userEmail string
 	// 2. Save order to database
 	if err := s.repo.CreateOrder(ctx, order); err != nil {
 		return nil, nil, err
-	}
-
-	// 3. Create payment via payment-service
-	paymentReqBody := map[string]interface{}{
-		"order_id": order.ID,
-		"user_id":  userID,
-		"amount":   order.TotalAmount,
-		"items":    order.Items,
-		"customer": map[string]string{
-			"email": userEmail,
-		},
-	}
-
-	bodyBytes, _ := json.Marshal(paymentReqBody)
-	paymentReq, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("%s/api/v1/payments", s.paymentServiceURL), bytes.NewBuffer(bodyBytes))
-	if err == nil {
-		paymentReq.Header.Set("Content-Type", "application/json")
-		paymentResp, err := s.httpClient.Do(paymentReq)
-		
-		// We proceed even if payment creation fails (to allow retries or handling by client),
-		// or we can fail the whole transaction. The spec says payment-service will return snap token.
-		var paymentInfo *OrderPaymentInfo
-		if err == nil && paymentResp.StatusCode == http.StatusOK {
-			defer paymentResp.Body.Close()
-			var pResp struct {
-				Success bool `json:"success"`
-				Data    struct {
-					ID        string `json:"id"`
-					SnapToken string `json:"snap_token"`
-					SnapURL   string `json:"snap_url"`
-				} `json:"data"`
-			}
-			if err := json.NewDecoder(paymentResp.Body).Decode(&pResp); err == nil && pResp.Success {
-				paymentInfo = &OrderPaymentInfo{
-					ID:        pResp.Data.ID,
-					SnapToken: pResp.Data.SnapToken,
-					SnapURL:   pResp.Data.SnapURL,
-				}
-			}
-		}
-		
-		// If paymentInfo is still nil here, we could return the order but without payment info, 
-		// but typically we'd want the payment info to be successfully generated.
-		// For MVP, we return whatever we have.
-		return order, paymentInfo, nil
 	}
 
 	return order, nil, nil

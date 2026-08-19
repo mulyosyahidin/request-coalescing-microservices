@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { apiClient } from "@/lib/axios";
 import { OrderDetailResponse, Order } from "@/types/order";
 import Link from "next/link";
+import PayNowButton from "@/components/PayNowButton";
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -122,10 +123,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                   <p className="text-sm text-indigo-600 dark:text-indigo-400 mb-4">
                     Please complete your payment to process this order.
                   </p>
-                  <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition shadow-md w-full sm:w-auto">
-                    Pay Now
-                  </button>
-                  <p className="text-xs text-gray-500 mt-3 italic">* Midtrans payment gateway integration pending</p>
+                  <PayNowButton orderId={order.id} />
+                  <p className="text-xs text-gray-500 mt-3 italic">* Powered by Midtrans Snap</p>
                 </div>
               )}
             </div>

@@ -366,6 +366,109 @@ paths:
               schema:
                 $ref: '#/components/schemas/BaseSuccessResponse'
 
+  /api/v1/welcome/auth:
+    get:
+      tags:
+        - System
+      summary: Welcome to Auth Service
+      responses:
+        '200':
+          description: OK
+  /api/v1/welcome/product:
+    get:
+      tags:
+        - System
+      summary: Welcome to Product Service
+      responses:
+        '200':
+          description: OK
+  /api/v1/welcome/order:
+    get:
+      tags:
+        - System
+      summary: Welcome to Order Service
+      responses:
+        '200':
+          description: OK
+  /api/v1/welcome/payment:
+    get:
+      tags:
+        - System
+      summary: Welcome to Payment Service
+      responses:
+        '200':
+          description: OK
+  /api/v1/payments:
+    post:
+      tags:
+        - Payment
+      summary: Create a new payment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /api/v1/payments/order/{orderId}:
+    get:
+      tags:
+        - Payment
+      summary: Get payment detail by order ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+  /api/v1/payments/notification:
+    post:
+      tags:
+        - Payment
+      summary: Midtrans Webhook Notification
+      description: Endpoint for Midtrans to send payment status updates.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+
 components:
   securitySchemes:
     bearerAuth:
@@ -755,3 +858,51 @@ components:
         status:
           type: string
           enum: [pending_payment, paid, confirmed, shipped, completed, cancelled, expired]
+    
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        status:
+          type: string
+          example: "pending"
+        snap_token:
+          type: string
+        snap_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreatePaymentRequest:
+      type: object
+      required:
+        - order_id
+      properties:
+        order_id:
+          type: string
+          format: uuid
+
+    PaymentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/Payment'
