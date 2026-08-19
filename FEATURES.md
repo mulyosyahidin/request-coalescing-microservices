@@ -156,15 +156,6 @@ GET    /metrics                        → Prometheus metrics
 
 ---
 
-## 3. Order Service (`/microservices/order-service`)
-
-### Tanggung Jawab
-Mengelola proses pemesanan (checkout). Berkomunikasi dengan product-service untuk validasi stok. **Menerapkan data isolation berbasis ownership**: customer hanya bisa mengakses order miliknya sendiri, sementara admin bisa melihat seluruh order.
-
-### Fitur Awal
-
-| #   | Fitur                  | Deskripsi                                                                     |
-| --- | ---------------------- | ----------------------------------------------------------------------------- |
 | O1  | Create Order           | Buat pesanan baru — `user_id` diambil dari JWT `sub`, bukan dari request body |
 | O2  | Get Order by ID        | Lihat detail pesanan — customer hanya bisa lihat miliknya, admin bisa semua   |
 | O3  | List User Orders       | Daftar pesanan — customer: miliknya saja, admin: seluruh order                |
@@ -176,17 +167,11 @@ Mengelola proses pemesanan (checkout). Berkomunikasi dengan product-service untu
 
 #### 🛒 Customer (Role: `customer`)
 ```
-POST   /api/v1/orders                 → Create order [AUTH] — user_id dari JWT sub
-GET    /api/v1/orders/:id             → Get order by ID [AUTH] — hanya order milik sendiri
-GET    /api/v1/orders                 → List own orders [AUTH] — auto-filter by user_id
 ```
 > Customer yang mencoba mengakses order milik user lain akan mendapat response `403 Forbidden` atau `404 Not Found` (untuk menghindari information leakage, gunakan `404`).
 
 #### 👑 Admin (Role: `admin`)
 ```
-GET    /api/v1/orders                 → List ALL orders [AUTH, ADMIN] — tanpa filter user_id
-GET    /api/v1/orders/:id             → Get ANY order by ID [AUTH, ADMIN]
-PATCH  /api/v1/orders/:id/status      → Update order status [AUTH, ADMIN]
 ```
 > Admin bisa melihat dan mengelola seluruh order dari semua user. Endpoint `PATCH .../status` **hanya bisa diakses admin**.
 
@@ -295,10 +280,6 @@ GET    /api/v1/products/:id         →   product-service:8080/api/v1/products/:
 POST   /api/v1/products             →   product-service:8080/api/v1/products                [AUTH+ADMIN]
 PUT    /api/v1/products/:id         →   product-service:8080/api/v1/products/:id            [AUTH+ADMIN]
 DELETE /api/v1/products/:id         →   product-service:8080/api/v1/products/:id            [AUTH+ADMIN]
-POST   /api/v1/orders               →   order-service:8080/api/v1/orders                   [AUTH]
-GET    /api/v1/orders/:id           →   order-service:8080/api/v1/orders/:id               [AUTH]
-GET    /api/v1/orders               →   order-service:8080/api/v1/orders                   [AUTH]
-PATCH  /api/v1/orders/:id/status    →   order-service:8080/api/v1/orders/:id/status        [AUTH+ADMIN]
 ```
 
 > **Legend:**
@@ -435,7 +416,6 @@ services:
   - krakend           # API Gateway
   - auth-service      # + auth-db (PostgreSQL)
   - product-service   # + product-db (PostgreSQL)
-  - order-service     # + order-db (PostgreSQL)
   - prometheus        # Metrics collection
   - grafana           # Dashboard & visualisasi
   - loki              # Log aggregation

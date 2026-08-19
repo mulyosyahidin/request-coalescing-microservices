@@ -19,7 +19,7 @@ Mengukur dan membandingkan dampak fitur *request coalescing* (concurrent request
 | Layer              | Teknologi                      | Catatan                                           |
 | ------------------ | ------------------------------ | ------------------------------------------------- |
 | API Gateway        | **KrakenD**                    | Konfigurasi coalescing & non-coalescing           |
-| Microservices      | **Go (Golang)**                | auth-service, product-service, order-service      |
+| Microservices      | **Go (Golang)**                | auth-service, product-service      |
 | Client Application | **Next.js**                    | SSR/CSR frontend (Runtime & PM: **Bun**)          |
 | Load Testing       | **K6 (Grafana)**               | Skenario hot-key burst dan load test              |
 | Observability      | **Grafana, Prometheus, Loki, Alloy** | Metrics, logs, dan tracing                  |
@@ -39,7 +39,6 @@ RequestCoalescing/
 ├── microservices/
 │   ├── auth-service/       # Autentikasi & otorisasi (JWT)
 │   ├── product-service/    # CRUD produk & cache layer
-│   └── order-service/      # Manajemen order & checkout
 ├── observability/
 │   ├── grafana/            # Dashboard & provisioning
 │   │   ├── dashboards/     # JSON dashboard (request-coalescing.json, dll)
@@ -183,8 +182,8 @@ Proyek ini menerapkan **Role-Based Access Control (RBAC) sederhana** dengan dua 
 
 | Role       | Deskripsi                                                                                      |
 | ---------- | ---------------------------------------------------------------------------------------------- |
-| `admin`    | Akses penuh: CRUD produk, melihat **seluruh** order dari semua user, manage status order.      |
-| `customer` | Akses terbatas: registrasi/login, lihat produk (read-only), buat order, lihat order **sendiri**.|
+| `admin`    | Akses penuh: CRUD produk.      |
+| `customer` | Akses terbatas: registrasi/login, lihat produk (read-only).|
 
 #### JWT Claims (Payload)
 
@@ -215,7 +214,6 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
    - **Setiap service WAJIB memvalidasi role di handler/middleware sendiri**, tidak boleh hanya mengandalkan gateway.
    - auth-service: Assign role `customer` sebagai default saat registrasi. Admin dibuat melalui seed data atau endpoint internal.
    - product-service: Endpoint write (`POST`, `PUT`, `DELETE`) hanya bisa diakses oleh role `admin`. Endpoint read (`GET`) bersifat public.
-   - order-service: Customer hanya bisa melihat order miliknya sendiri (filter by `user_id` dari JWT `sub`). Admin bisa melihat semua order.
 
 #### Default Role & Admin Provisioning
 - User baru yang registrasi via `POST /api/v1/auth/register` **selalu mendapat role `customer`**.
@@ -240,7 +238,6 @@ Otorisasi ditegakkan di **dua layer** yang saling melengkapi:
 10. **Jaga konsistensi** — jika satu service sudah menggunakan pattern tertentu, service lain harus mengikuti.
 11. **Sertakan `role` di JWT claims** — setiap token yang diterbitkan auth-service wajib mengandung field `role` (`admin` atau `customer`).
 12. **Validasi otorisasi di DUA layer** — gateway (KrakenD) DAN service handler/middleware. Jangan hanya mengandalkan satu layer.
-13. **Filter data berdasarkan ownership** — order-service harus memfilter data berdasarkan `user_id` dari JWT `sub` untuk role `customer`. Admin boleh melihat semua data.
 14. **Format Response Standar** — Semua endpoint di seluruh service WAJIB mengembalikan JSON dengan envelope standar:
     - **Sukses:** `{"success": true, "message": "string", "data": { ... }}`
     - **Gagal/Error:** `{"success": false, "message": "string", "error": { "code": "ERROR_CODE" }}`

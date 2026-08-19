@@ -24,7 +24,6 @@
   - [x] `/load-testing`
   - [x] `/microservices/auth-service`
   - [x] `/microservices/product-service`
-  - [x] `/microservices/order-service`
   - [x] `/observability/grafana`
   - [x] `/observability/prometheus`
 - [x] Membuat `.gitignore`
@@ -56,7 +55,6 @@
   - [x] Health check endpoint (`GET /health`)
   - [x] Metrics endpoint (`GET /metrics`)
   - [x] Dockerfile (multi-stage build)
-- [x] **Order Service**
   - [x] Inisialisasi Go module (`go mod init`)
   - [ ] Setup project layout (`cmd/`, `internal/`, `migrations/`) — *(dikerjakan di Fase 3.3)*
   - [x] Entry point `cmd/main.go` dengan HTTP server dasar
@@ -77,7 +75,6 @@
   - [x] KrakenD service
   - [x] auth-service + auth-db (PostgreSQL)
   - [x] product-service + product-db (PostgreSQL)
-  - [x] order-service + order-db (PostgreSQL)
   - [x] Prometheus
   - [x] Grafana
   - [x] Loki + Alloy
@@ -147,27 +144,8 @@
   - [ ] Unit tests untuk repository layer
   - [ ] Integration test endpoint `GET /products/:id`
 
-### 3.3 Order Service — Implementasi Penuh
-- [ ] **Database**
-  - [ ] Migration: Create `orders` dan `order_items` tables
-  - [ ] Repository layer
-- [ ] **Business Logic**
-  - [ ] Create order (validasi stok via product-service)
-  - [ ] Get order by ID
-  - [ ] List user orders
-  - [ ] Update order status (state machine)
-- [ ] **HTTP Handlers**
-  - [ ] `POST /api/v1/orders`
-  - [ ] `GET /api/v1/orders/:id`
-  - [ ] `GET /api/v1/orders`
-  - [ ] `PATCH /api/v1/orders/:id/status`
-- [ ] **Middleware**
-  - [ ] Auth middleware
-- [ ] **Testing**
-  - [ ] Unit tests
-  - [ ] Integration test
 
-### 3.4 KrakenD API Gateway
+### 3.3 KrakenD API Gateway
 - [x] **Konfigurasi Dasar**
   - [x] `krakend.json` dengan route mapping semua endpoint
   - [x] JWT validation pada endpoint yang memerlukan auth (KrakenD plugin)
@@ -185,7 +163,7 @@
   - [x] Verifikasi JWT validation bekerja
   - [x] Verifikasi coalescing ON vs OFF berfungsi
 
-### 3.5 Client Application
+### 3.4 Client Application
 - [x] **Pages**
   - [x] Home page dengan produk unggulan (Mock UI diubah jadi Fetch Live API)
   - [x] Product List page (pagination, search, filter - Live API)
@@ -193,7 +171,6 @@
   - [x] Login & Register page
   - [ ] Cart page (client-side state)
   - [ ] Checkout page
-  - [ ] Order History page
   - [x] Admin Dashboard (CRUD Products)
 - [x] **Auth Integration**
   - [x] Login/Register flow dengan JWT
@@ -213,7 +190,6 @@
 - [x] Buat `prometheus.yml` — scrape config untuk semua services
   - [x] auth-service
   - [x] product-service
-  - [x] order-service
   - [x] KrakenD
 - [x] Verifikasi semua target UP di Prometheus UI
 
@@ -290,7 +266,6 @@
 - [ ] **Microservices**
   - [ ] Deployment + Service untuk auth-service
   - [ ] Deployment + Service untuk product-service
-  - [ ] Deployment + Service untuk order-service
   - [ ] ConfigMap untuk environment variables
   - [ ] Secrets untuk JWT secret, dll
 - [ ] **API Gateway**

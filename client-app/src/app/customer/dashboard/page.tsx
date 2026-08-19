@@ -89,7 +89,7 @@ export default async function CustomerDashboard() {
               <span className="text-4xl mb-2">🛒</span>
               <p className="text-sm text-gray-500 dark:text-gray-400">No orders found.</p>
               <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                Order service integration coming in Phase 3.3.
+                
               </p>
               <a 
                 href="/products" 

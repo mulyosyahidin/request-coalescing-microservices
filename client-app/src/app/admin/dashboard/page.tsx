@@ -109,10 +109,10 @@ export default async function AdminDashboard() {
                   <span className="text-2xl">📋</span>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  View all orders and update statuses. Phase 3.3 integration pending.
+                  
                 </p>
                 <button disabled className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 font-medium rounded-lg cursor-not-allowed">
-                  Manage Orders (Coming Soon)
+                  Manage Orders
                 </button>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default async function AdminDashboard() {
               <h2 className="text-lg font-semibold mb-4">Quick Stats</h2>
               <div className="flex flex-col items-center justify-center h-32 bg-gray-50 dark:bg-gray-950/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                  Stats will be available once product and order services are fully online.
+                  Stats will be available once product service is fully online.
                 </p>
               </div>
             </div>
