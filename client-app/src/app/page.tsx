@@ -1,216 +1,159 @@
-export default function HomePage() {
-  const featuredProducts = [
-    {
-      id: "1",
-      name: "Quantum Mechanical Keyboard RGB Pro",
-      sku: "KB-HOTKEY-001",
-      category: "Electronics",
-      price: 129.99,
-      originalPrice: 159.99,
-      rating: 4.9,
-      reviews: 1420,
-      badge: "⭐ Hot-Key Target (ID: 1)",
-      stock: 45,
-      description: "Flagship mechanical keyboard with ultra-low latency optical switches. Prime candidate for burst traffic testing.",
-    },
-    {
-      id: "2",
-      name: "Ultra-Wide Gaming Monitor 34-inch 144Hz",
-      sku: "MON-34-UW",
-      category: "Monitors",
-      price: 499.00,
-      originalPrice: 599.00,
-      rating: 4.8,
-      reviews: 870,
-      badge: "Bestseller",
-      stock: 18,
-      description: "Curved IPS display with HDR400 support and 1ms response time.",
-    },
-    {
-      id: "3",
-      name: "Noise-Cancelling Wireless Headphones Max",
-      sku: "AUDIO-NC-PRO",
-      category: "Audio",
-      price: 249.50,
-      originalPrice: 299.00,
-      rating: 4.7,
-      reviews: 620,
-      badge: "Popular",
-      stock: 30,
-      description: "Studio-grade active noise cancellation with 40-hour battery life.",
-    },
-    {
-      id: "4",
-      name: "Ergonomic Aluminium Laptop Stand",
-      sku: "ACC-STAND-04",
-      category: "Accessories",
-      price: 45.00,
-      originalPrice: 55.00,
-      rating: 4.6,
-      reviews: 310,
-      badge: "Deal",
-      stock: 85,
-      description: "Full rotation and height adjustable stand for all laptops up to 17 inches.",
-    },
-  ];
+import { apiClient } from "@/lib/axios";
+import { ProductsResponse, Product } from "@/types/product";
+import Link from "next/link";
+
+export default async function Home() {
+  let products: Product[] = [];
+  try {
+    const res = await apiClient.get<ProductsResponse>("/products?limit=8");
+    if (res.data?.success) {
+      products = res.data.data.items || [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch featured products:", error);
+  }
+
+  const formatRupiah = (price: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  };
 
   return (
-    <div className="space-y-16 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-20">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-violet-900 text-white py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="inline-flex items-center space-x-2 bg-indigo-500/30 border border-indigo-400/30 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase text-indigo-200">
-              <span>⚡ KrakenD Request Coalescing Lab</span>
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-              High-Concurrency <br />
-              <span className="bg-gradient-to-r from-teal-300 to-indigo-200 bg-clip-text text-transparent">
-                E-Commerce Architecture
+      <section className="relative overflow-hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150"></div>
+          <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-indigo-50 to-transparent dark:from-indigo-950/20 dark:to-transparent pointer-events-none"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32 relative z-10">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-sm font-semibold mb-6 border border-indigo-100 dark:border-indigo-800">
+              <span className="flex h-2 w-2 rounded-full bg-indigo-600 animate-pulse"></span>
+              Live Architecture Demo
+            </span>
+            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight mb-8">
+              Microservices <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500">
+                Request Coalescing
               </span>
             </h1>
-
-            <p className="text-lg text-indigo-100 max-w-xl leading-relaxed">
-              Experience the power of <strong>Request Coalescing (Concurrent Request Collapsing)</strong>. 
-              When thousands of users request the same hot-key product simultaneously, KrakenD coalesces identical backend requests into a single database hit.
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-10 leading-relaxed">
+              Explore how our API Gateway deduplicates concurrent requests in real-time, eliminating backend bottlenecks during high-traffic flash sales.
             </p>
-
-            <div className="flex flex-wrap gap-4 pt-2">
-              <a
-                href="/products"
-                className="px-6 py-3.5 bg-white dark:bg-gray-900 text-indigo-900 dark:text-indigo-100 font-semibold rounded-xl hover:bg-indigo-50 shadow-lg shadow-indigo-950/20 transition-all"
-              >
-                Browse Mock Catalog
-              </a>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="#coalescing-info"
-                className="px-6 py-3.5 bg-indigo-700/50 hover:bg-indigo-700/80 border border-indigo-400/30 text-white font-semibold rounded-xl backdrop-blur transition"
+                className="px-8 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
               >
-                How Coalescing Works
+                Learn How It Works
               </a>
+              <Link
+                href="/products"
+                className="px-8 py-3.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+              >
+                Browse Catalog
+              </Link>
             </div>
           </div>
+        </div>
 
-          {/* Hero Visual Card */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 sm:p-8 shadow-2xl text-white">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-              <div className="flex items-center space-x-2">
-                <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="text-sm font-semibold tracking-wide">Gateway Simulator</span>
-              </div>
-              <span className="text-xs bg-indigo-500/40 px-2.5 py-1 rounded-md text-indigo-200">
-                GKE Parity Ready
-              </span>
-            </div>
-
-            <div className="space-y-4">
-              <div className="bg-black/30 rounded-xl p-4 border border-white/10">
-                <div className="flex justify-between text-xs text-gray-400 mb-1">
-                  <span>Client Traffic Inbound</span>
-                  <span className="text-emerald-400 font-mono">1,000 req/s</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
-                  <div className="bg-indigo-400 h-2 rounded-full w-full"></div>
-                </div>
-              </div>
-
-              <div className="flex justify-center my-1 text-indigo-300">
-                <span className="text-xs font-mono">↓ KrakenD Request Deduplication ↓</span>
-              </div>
-
-              <div className="bg-emerald-950/40 rounded-xl p-4 border border-emerald-500/30">
-                <div className="flex justify-between text-xs text-gray-300 mb-1">
-                  <span className="text-emerald-300 font-medium">Backend Hits (Coalescing ON)</span>
-                  <span className="text-emerald-300 font-mono font-bold">1 Backend Req</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
-                  <div className="bg-emerald-400 h-2 rounded-full w-1/12"></div>
-                </div>
-                <p className="text-[11px] text-emerald-200 mt-2">
-                  🎉 99.9% database load reduction on hot product queries!
-                </p>
-              </div>
+        {/* Decorative Status Bar */}
+        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 transform origin-bottom -skew-y-1 opacity-90"></div>
+        <div className="absolute bottom-0 inset-x-0 h-16 bg-gray-900 dark:bg-black flex items-center justify-center space-x-12 px-4 overflow-hidden">
+          <div className="flex items-center gap-2 text-emerald-400 text-sm font-mono whitespace-nowrap">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            Gateway: Online
+          </div>
+          <div className="hidden sm:flex items-center gap-2 text-gray-400 text-sm font-mono whitespace-nowrap">
+            <span>Coalescing Mode:</span>
+            <span className="text-white bg-white/10 px-2 py-0.5 rounded">ACTIVE</span>
+          </div>
+          <div className="hidden md:flex items-center gap-3 text-gray-400 text-sm font-mono whitespace-nowrap">
+            <span>Backend Load:</span>
+            <div className="w-24 h-2 bg-gray-800 rounded-full overflow-hidden">
+              <div className="bg-emerald-400 h-2 rounded-full w-1/12"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Products Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 mb-24">
         <div className="flex justify-between items-end mb-8">
           <div>
             <span className="text-sm font-bold tracking-wider text-indigo-600 uppercase">
-              Mock Catalog
+              Live Catalog
             </span>
             <h2 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 mt-1">
-              Featured Products & Hot Keys
+              Featured Products
             </h2>
           </div>
-          <a
+          <Link
             href="/products"
             className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 group"
           >
             View all products
             <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((p) => (
+          {products.map((p) => (
             <div
               key={p.id}
               className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col group"
             >
               {/* Product Image Placeholder */}
-              <div className="h-48 bg-gradient-to-tr from-gray-100 to-gray-200 flex flex-col items-center justify-center p-4 relative">
-                <span className="absolute top-3 left-3 bg-indigo-600 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-sm">
-                  {p.badge}
-                </span>
-                <div className="w-16 h-16 rounded-2xl bg-white/80 dark:bg-gray-800/80 shadow-sm flex items-center justify-center text-gray-400 font-bold text-lg group-hover:scale-105 transition-transform">
-                  #{p.id}
-                </div>
-                <span className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-2">{p.sku}</span>
+              <div className="h-48 bg-gradient-to-tr from-gray-100 to-gray-200 flex flex-col items-center justify-center relative overflow-hidden">
+                {p.photo_url ? (
+                  <img src={p.photo_url} alt={p.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <div className="w-16 h-16 rounded-2xl bg-white/80 dark:bg-gray-800/80 shadow-sm flex items-center justify-center text-gray-400 font-bold text-lg group-hover:scale-105 transition-transform z-10">
+                    No Img
+                  </div>
+                )}
+                {p.stock <= 5 && p.stock > 0 && (
+                  <span className="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-sm z-10">
+                    Low Stock
+                  </span>
+                )}
               </div>
 
               {/* Product Content */}
               <div className="p-5 flex flex-col flex-grow">
-                <div className="text-xs text-indigo-600 font-medium mb-1">{p.category}</div>
                 <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base mb-2 line-clamp-1">
                   {p.name}
                 </h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4">
-                  {p.description}
+                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 h-8">
+                  {p.description || "No description provided."}
                 </p>
 
                 {/* Rating & Stock */}
                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4 pb-4 border-b border-gray-100 dark:border-gray-800">
                   <div className="flex items-center text-amber-500 font-medium">
-                    ★ <span className="text-gray-700 dark:text-gray-300 ml-1">{p.rating}</span>
-                    <span className="text-gray-400 ml-1">({p.reviews})</span>
+                    ★ <span className="text-gray-700 dark:text-gray-300 ml-1">5.0</span>
                   </div>
-                  <span className="text-emerald-600 font-medium">{p.stock} in stock</span>
+                  <span className={p.stock > 0 ? "text-emerald-600 font-medium" : "text-red-500 font-medium"}>
+                    {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
+                  </span>
                 </div>
 
                 {/* Price & Action */}
                 <div className="mt-auto flex items-center justify-between">
-                  <div>
-                    <div className="text-lg font-extrabold text-gray-900 dark:text-gray-100">
-                      ${p.price.toFixed(2)}
-                    </div>
-                    {p.originalPrice && (
-                      <div className="text-xs text-gray-400 line-through">
-                        ${p.originalPrice.toFixed(2)}
-                      </div>
-                    )}
+                  <div className="text-lg font-extrabold text-indigo-600 dark:text-indigo-400">
+                    {formatRupiah(p.price)}
                   </div>
 
-                  <a
-                    href="/products"
+                  <Link
+                    href={`/products/${p.id}`}
                     className="px-3.5 py-2 bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold transition"
                   >
                     Details
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

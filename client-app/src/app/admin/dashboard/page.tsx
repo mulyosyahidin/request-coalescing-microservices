@@ -95,11 +95,11 @@ export default async function AdminDashboard() {
                   <span className="text-2xl">📦</span>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Add, update, or remove products. Phase 3.2 integration pending.
+                  Add, update, or remove products from the catalog.
                 </p>
-                <button disabled className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 font-medium rounded-lg cursor-not-allowed">
-                  Manage Products (Coming Soon)
-                </button>
+                <a href="/admin/products" className="block text-center w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">
+                  Manage Products
+                </a>
               </div>
 
               {/* Order Management */}

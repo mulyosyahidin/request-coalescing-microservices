@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 
 	"product-service/internal/model"
 	"product-service/internal/repository"
@@ -62,6 +63,11 @@ func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	if _, err := uuid.Parse(id); err != nil {
+		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Product ID must be a valid UUID")
+		return
+	}
+
 	p, err := h.svc.GetProductByID(r.Context(), id)
 	if err != nil {
 		if errors.Is(err, repository.ErrProductNotFound) {
@@ -102,6 +108,10 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Missing product ID")
 		return
 	}
+	if _, err := uuid.Parse(id); err != nil {
+		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Product ID must be a valid UUID")
+		return
+	}
 
 	var req model.UpdateProductRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -126,6 +136,10 @@ func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Missing product ID")
+		return
+	}
+	if _, err := uuid.Parse(id); err != nil {
+		RespondError(w, http.StatusBadRequest, "INVALID_ID", "Product ID must be a valid UUID")
 		return
 	}
 

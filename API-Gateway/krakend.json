@@ -135,7 +135,12 @@
     {
       "endpoint": "/api/v1/products",
       "method": "GET",
-      "input_headers": ["*"],
+      "input_headers": [
+        "*"
+      ],
+      "input_query_strings": [
+        "*"
+      ],
       "output_encoding": "json",
       "backend": [
         {
