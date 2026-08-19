@@ -313,6 +313,9 @@
 
 ### 4.4 Integrasi End-to-End Observability
 - [x] Verifikasi metrics dari semua service terlihat di Grafana
+  - [x] Fine-tune KrakenD opencensus metrics
+  - [x] Multi-target postgres-exporter per service
+  - [x] Resource isolation filters (Microservices vs Infra)
 - [x] Verifikasi log dari semua service terlihat di Grafana (Loki)
 - [x] Correlate metrics dengan logs (filter by service, time range)
 

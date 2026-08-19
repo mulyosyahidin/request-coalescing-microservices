@@ -207,6 +207,7 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-remote-write-receiver"
     volumes:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -310,3 +311,67 @@ services:
         condition: service_healthy
     networks:
       - rc-network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "8099:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg
+    networks:
+      - rc-network
+
+
+
+  auth-db-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: auth-db-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "${AUTH_DATABASE_URL}"
+    networks:
+      - rc-network
+    depends_on:
+      - auth-db
+
+  product-db-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: product-db-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "${PRODUCT_DATABASE_URL}"
+    networks:
+      - rc-network
+    depends_on:
+      - product-db
+
+  order-db-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: order-db-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "${ORDER_DATABASE_URL}"
+    networks:
+      - rc-network
+    depends_on:
+      - order-db
+
+  payment-db-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: payment-db-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "${PAYMENT_DATABASE_URL}"
+    networks:
+      - rc-network
+    depends_on:
+      - payment-db

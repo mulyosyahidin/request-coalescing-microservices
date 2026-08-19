@@ -30,7 +30,7 @@
         "y": 0
       },
       "id": 100,
-      "title": "⚡ Request Coalescing & Gateway Performance",
+      "title": "\u26a1 Request Coalescing & Gateway Performance",
       "type": "row"
     },
     {
@@ -79,7 +79,11 @@
       "id": 1,
       "options": {
         "legend": {
-          "calcs": ["mean", "lastNotNull", "max"],
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -89,7 +93,7 @@
           "sort": "desc"
         }
       },
-      "title": "Throughput — Requests per Second (RPS)",
+      "title": "Throughput \u2014 Requests per Second (RPS)",
       "type": "timeseries",
       "targets": [
         {
@@ -98,7 +102,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(promhttp_metric_handler_requests_total[30s])) by (job)",
+          "expr": "sum(rate(promhttp_metric_handler_requests_total{job=~\".*-service\"}[30s])) by (job)",
           "legendFormat": "{{job}} RPS",
           "range": true,
           "refId": "A"
@@ -109,7 +113,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(krakend_router_connected_total[30s]))",
+          "expr": "sum(rate(opencensus_io_http_server_request_count[1m]))",
           "legendFormat": "KrakenD Inbound RPS",
           "range": true,
           "refId": "B"
@@ -149,7 +153,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -162,7 +166,10 @@
       "id": 2,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": [
+            "mean",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -180,11 +187,18 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "editorMode": "code",
-          "expr": "sum(rate(http_request_duration_seconds_sum[1m])) by (job) / sum(rate(http_request_duration_seconds_count[1m])) by (job)",
-          "legendFormat": "{{job}} Avg Duration",
-          "range": true,
+          "expr": "sum(rate(opencensus_io_http_client_roundtrip_latency_sum[1m])) by (http_client_host) / sum(rate(opencensus_io_http_client_roundtrip_latency_count[1m])) by (http_client_host)",
+          "legendFormat": "{{http_client_host}} (Backend)",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "sum(rate(opencensus_io_http_server_latency_sum[1m])) / sum(rate(opencensus_io_http_server_latency_count[1m]))",
+          "legendFormat": "KrakenD (Gateway)",
+          "refId": "B"
         }
       ]
     },
@@ -197,7 +211,7 @@
         "y": 9
       },
       "id": 101,
-      "title": "🔍 Microservices Runtime & Resource Metrics",
+      "title": "\ud83d\udd0d Microservices Runtime & Resource Metrics",
       "type": "row"
     },
     {
@@ -235,7 +249,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "go_goroutines",
+          "expr": "go_goroutines{job=~\".*-service\"}",
           "legendFormat": "{{job}}",
           "refId": "A"
         }
@@ -276,7 +290,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "go_memstats_alloc_bytes",
+          "expr": "go_memstats_alloc_bytes{job=~\".*-service\"}",
           "legendFormat": "{{job}}",
           "refId": "A"
         }
@@ -317,7 +331,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "rate(go_gc_duration_seconds_sum[1m])",
+          "expr": "rate(go_gc_duration_seconds_sum{job=~\".*-service\"}[1m])",
           "legendFormat": "{{job}} GC",
           "refId": "A"
         }
@@ -332,7 +346,7 @@
         "y": 17
       },
       "id": 102,
-      "title": "📋 Application Logs (Loki Live Stream)",
+      "title": "\ud83d\udccb Application Logs (Loki Live Stream)",
       "type": "row"
     },
     {
@@ -371,17 +385,419 @@
           "refId": "A"
         }
       ]
+    },
+    {
+      "type": "timeseries",
+      "title": "\ud83d\udd25 App Error Rate (from Logs)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "Loki"
+          },
+          "expr": "sum by (container) (rate({compose_project=\"requestcoalescing\"} |= \"error\" [1m]))",
+          "legendFormat": "{{container}}"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right"
+        }
+      }
+    },
+    {
+      "type": "gauge",
+      "title": "\u26a1 Backend Hit Ratio (Coalescing Efficiency)",
+      "description": "Lower % means Coalescing is working better (fewer requests hitting backend)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "(sum(rate(product_db_queries_total{operation=\"select_one\"}[1m])) / sum(rate(opencensus_io_http_server_request_count[1m]))) * 100",
+          "legendFormat": "Backend Hit %"
+        }
+      ],
+      "options": {
+        "text": {
+          "valueSize": 50
+        },
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "\ud83d\udda5\ufe0f CPU Usage (Process)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(process_cpu_seconds_total{job=~\".*-service\"}[1m])",
+          "legendFormat": "{{job}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "\ud83e\udde0 Memory Usage (Process)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 48
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "process_resident_memory_bytes{job=~\".*-service\"}",
+          "legendFormat": "{{job}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      }
+    },
+    {
+      "type": "logs",
+      "title": "\ud83d\udccb Structured Log Stream",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "Loki"
+          },
+          "expr": "{compose_project=\"requestcoalescing\"} | json"
+        }
+      ],
+      "options": {
+        "showLabels": false,
+        "showTime": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true
+      }
+    },
+    {
+      "type": "row",
+      "title": "\ud83d\uddc4\ufe0f Database Usage Monitoring (cAdvisor)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 58
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Database CPU Usage (Cores)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 68
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\".*-db\"}[1m])",
+          "legendFormat": "{{name}}"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Database Memory Usage",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 68
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "container_memory_usage_bytes{name=~\".*-db\"}",
+          "legendFormat": "{{name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "\u2699\ufe0f System Usage (Gateway, Infra, Exporters)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 78
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "System CPU Usage (Process)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 88
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(process_cpu_seconds_total{job!~\".*-service\"}[1m])",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "System Memory Usage",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 88
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "process_resident_memory_bytes{job!~\".*-service\"}",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "type": "row",
+      "title": "\ud83d\udc18 Database Metrics (Postgres Exporter)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 98
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Active Database Connections",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 108
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "pg_stat_database_numbackends{datname!~\"template.*|postgres\"}",
+          "legendFormat": "{{datname}}"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Database Transactions (Commits/sec)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 108
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "expr": "rate(pg_stat_database_xact_commit{datname!~\"template.*|postgres\"}[1m])",
+          "legendFormat": "{{datname}}"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        }
+      }
     }
   ],
   "refresh": "5s",
   "schemaVersion": 39,
-  "tags": ["request-coalescing", "microservices", "krakend"],
+  "tags": [
+    "request-coalescing",
+    "microservices",
+    "krakend"
+  ],
   "time": {
     "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
-    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"]
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m"
+    ]
   },
   "timezone": "browser",
   "title": "Request Coalescing & Observability Overview",
