@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/axios";
 import Link from "next/link";
 import { ProductDetailResponse } from "@/types/product";
+import { AddToCartButton } from "@/components/AddToCartButton";
 
 export default async function PublicProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -79,12 +80,7 @@ export default async function PublicProductDetail({ params }: { params: Promise<
             </div>
             
             <div className="mt-auto">
-              <button 
-                disabled={product.stock <= 0}
-                className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition shadow-md hover:shadow-lg"
-              >
-                {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-              </button>
+              <AddToCartButton product={product} />
             </div>
           </div>
         </div>

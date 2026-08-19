@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { CartProvider } from "../context/CartContext";
+import { CartBadge } from "../components/CartBadge";
 import { cookies } from "next/headers";
 import { decodeJwt } from "jose";
 import { logoutAction } from "./actions/auth";
@@ -41,8 +43,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* Navigation Header */}
-          <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm backdrop-blur-md bg-opacity-95">
+          <CartProvider>
+            {/* Navigation Header */}
+            <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm backdrop-blur-md bg-opacity-95">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
                 {/* Brand Logo */}
@@ -74,6 +77,8 @@ export default async function RootLayout({
 
                 {/* User Actions */}
                 <div className="flex items-center space-x-3">
+                  <CartBadge />
+                  <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-2"></div>
                   {isAuthenticated ? (
                     <>
                       <a
@@ -128,6 +133,7 @@ export default async function RootLayout({
                 </div>
                 <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
                   <a href="/products" className="hover:text-indigo-600 transition">Products</a>
+                  <a href="/cart" className="hover:text-indigo-600 transition">Cart</a>
                   {isAuthenticated ? (
                     <a href={dashboardLink} className="hover:text-indigo-600 transition">Dashboard</a>
                   ) : (
@@ -143,6 +149,7 @@ export default async function RootLayout({
           
           {/* Theme Toggle Button */}
           <ThemeToggle />
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>

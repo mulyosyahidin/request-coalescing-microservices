@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/axios";
 import { ProductsResponse, Product } from "@/types/product";
 import Link from "next/link";
+import { AddToCartButton } from "@/components/AddToCartButton";
 
 export default async function Home() {
   let products: Product[] = [];
@@ -143,17 +144,19 @@ export default async function Home() {
                 </div>
 
                 {/* Price & Action */}
-                <div className="mt-auto flex items-center justify-between">
-                  <div className="text-lg font-extrabold text-indigo-600 dark:text-indigo-400">
-                    {formatRupiah(p.price)}
+                <div className="mt-auto flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <div className="text-lg font-extrabold text-indigo-600 dark:text-indigo-400">
+                      {formatRupiah(p.price)}
+                    </div>
+                    <Link
+                      href={`/products/${p.id}`}
+                      className="px-3.5 py-2 bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold transition"
+                    >
+                      Details
+                    </Link>
                   </div>
-
-                  <Link
-                    href={`/products/${p.id}`}
-                    className="px-3.5 py-2 bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold transition"
-                  >
-                    Details
-                  </Link>
+                  <AddToCartButton product={p} variant="list" showQuantity={false} />
                 </div>
               </div>
             </div>

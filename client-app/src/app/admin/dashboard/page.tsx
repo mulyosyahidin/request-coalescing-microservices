@@ -3,6 +3,8 @@ import { decodeJwt } from "jose";
 import { redirect } from "next/navigation";
 import { logoutAction } from "@/app/actions/auth";
 import { apiClient } from "@/lib/axios";
+import { ListOrdersResponse, Order } from "@/types/order";
+import Link from "next/link";
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
@@ -14,6 +16,7 @@ export default async function AdminDashboard() {
 
   let jwtPayload: any = null;
   let userProfile: any = null;
+  let orders: Order[] = [];
 
   try {
     jwtPayload = decodeJwt(token);
@@ -22,15 +25,18 @@ export default async function AdminDashboard() {
       redirect("/customer/dashboard"); // Not an admin, kick them to customer dashboard
     }
 
-    // Fetch full profile to get the name
-    const response = await apiClient.get("/auth/me", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    // Fetch full profile and orders concurrently
+    const [profileRes, ordersRes] = await Promise.allSettled([
+      apiClient.get("/auth/me", { headers: { Authorization: `Bearer ${token}` } }),
+      apiClient.get<ListOrdersResponse>("/orders?limit=15", { headers: { Authorization: `Bearer ${token}` } })
+    ]);
 
-    if (response.data?.success) {
-      userProfile = response.data.data;
+    if (profileRes.status === "fulfilled" && profileRes.value.data?.success) {
+      userProfile = profileRes.value.data.data;
+    }
+
+    if (ordersRes.status === "fulfilled" && ordersRes.value.data?.success) {
+      orders = ordersRes.value.data.data.orders || [];
     }
   } catch (error) {
     console.error("Dashboard error:", error);
@@ -38,6 +44,25 @@ export default async function AdminDashboard() {
   }
 
   const displayName = userProfile?.name || jwtPayload?.email || "Admin";
+
+  const formatRupiah = (price: number) => {
+    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(price);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "paid":
+      case "completed":
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      case "pending_payment":
+        return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
+      case "cancelled":
+      case "expired":
+        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+      default:
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 p-8">
@@ -60,10 +85,10 @@ export default async function AdminDashboard() {
           {/* Admin Profile Card */}
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 col-span-1 md:col-span-1">
             <h2 className="text-lg font-semibold mb-4">Profile</h2>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">User ID</p>
-                <p className="text-sm font-mono truncate bg-gray-100 dark:bg-gray-800 p-1.5 rounded mt-1">
+                <p className="text-xs font-mono truncate bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1">
                   {jwtPayload.sub}
                 </p>
               </div>
@@ -84,7 +109,7 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          {/* Admin Management Tools Placeholder */}
+          {/* Admin Management Tools */}
           <div className="col-span-1 md:col-span-3 space-y-6">
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -109,22 +134,65 @@ export default async function AdminDashboard() {
                   <span className="text-2xl">📋</span>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  
+                  Total Orders: {orders.length}
                 </p>
-                <button disabled className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 font-medium rounded-lg cursor-not-allowed">
-                  Manage Orders
-                </button>
+                <Link href="/admin/orders" className="block text-center w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition">
+                  View All Orders
+                </Link>
               </div>
             </div>
 
-            {/* Quick Stats Placeholder */}
+            {/* Recent Global Orders List */}
             <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
-              <h2 className="text-lg font-semibold mb-4">Quick Stats</h2>
-              <div className="flex flex-col items-center justify-center h-32 bg-gray-50 dark:bg-gray-950/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                  Stats will be available once product service is fully online.
-                </p>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Recent Global Orders</h2>
+                <Link href="/admin/orders" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+                  View All &rarr;
+                </Link>
               </div>
+              
+              {orders.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 bg-gray-50 dark:bg-gray-950/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                    No orders have been placed on the platform yet.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {orders.map(order => (
+                    <div key={order.id} className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+                      <div className="bg-gray-50 dark:bg-gray-800/50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Order ID</p>
+                          <p className="text-sm font-mono mt-0.5 text-indigo-600 dark:text-indigo-400">
+                            {order.id.split("-")[0]}...
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Customer ID</p>
+                          <p className="text-sm font-mono mt-0.5" title={order.user_id}>
+                            {order.user_id.split("-")[0]}...
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Total</p>
+                          <p className="text-sm font-bold mt-0.5">{formatRupiah(order.total_amount)}</p>
+                        </div>
+                        <div>
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
+                            {order.status.replace("_", " ")}
+                          </span>
+                        </div>
+                        <div>
+                          <Link href={`/admin/orders/${order.id}`} className="px-3 py-1.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-xs font-semibold transition whitespace-nowrap">
+                            Review
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>

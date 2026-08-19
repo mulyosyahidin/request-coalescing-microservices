@@ -189,11 +189,11 @@
   - [x] Product List page (pagination, search, filter - Live API)
   - [x] Product Detail page
   - [x] Login & Register page
-  - [ ] Cart page (client-side state)
-  - [ ] Checkout page (integrasi Midtrans Snap)
+  - [x] Cart page (client-side state)
+  - [x] Checkout page (integrasi Midtrans Snap) - Partially done (UI implemented, awaiting payment service)
   - [x] Admin Dashboard (CRUD Products)
-  - [ ] Order History page (customer: own orders)
-  - [ ] Admin: All Orders page (admin: semua order)
+  - [x] Order History page (customer: own orders)
+  - [x] Admin: All Orders page (admin: semua order)
 - [x] **Auth Integration**
   - [x] Login/Register flow dengan JWT
   - [x] Protected routes (redirect ke login)
@@ -205,32 +205,32 @@
   - [ ] Multi-stage build untuk Next.js
 
 ### 3.5 Order Service — Implementasi Penuh
-- [ ] **Database**
-  - [ ] Migration: Create `orders` table
-  - [ ] Migration: Create `order_items` table
-  - [ ] Repository layer (CRUD orders + order items, interface + PostgreSQL implementation)
-- [ ] **Business Logic**
-  - [ ] Create order: validasi items, snapshot harga/nama dari product-service, hitung total
-  - [ ] Get order by ID: ownership check (customer hanya bisa lihat miliknya)
-  - [ ] List orders: customer filtered by user_id, admin lihat semua (pagination)
-  - [ ] Update order status: admin only, validasi status transition
-  - [ ] Inter-service call ke product-service (validasi produk & harga)
-  - [ ] Inter-service call ke payment-service (create payment, terima callback)
-- [ ] **HTTP Handlers**
-  - [ ] `POST /api/v1/orders` — Create order [AUTH]
-  - [ ] `GET /api/v1/orders` — List orders [AUTH] (customer: own, admin: all)
-  - [ ] `GET /api/v1/orders/:id` — Get order detail [AUTH] (customer: own only)
-  - [ ] `PATCH /api/v1/orders/:id/status` — Update status [AUTH, ADMIN]
+- [x] **Database**
+  - [x] Migration: Create `orders` table
+  - [x] Migration: Create `order_items` table
+  - [x] Repository layer (CRUD orders + order items, interface + PostgreSQL implementation)
+- [x] **Business Logic**
+  - [x] Create order: validasi items, snapshot harga/nama dari product-service, hitung total
+  - [x] Get order by ID: ownership check (customer hanya bisa lihat miliknya)
+  - [x] List orders: customer filtered by user_id, admin lihat semua (pagination)
+  - [x] Update order status: admin only, validasi status transition
+  - [x] Inter-service call ke product-service (validasi produk & harga)
+  - [ ] Inter-service call ke payment-service (create payment, terima callback) - Awaiting payment service
+- [x] **HTTP Handlers**
+  - [x] `POST /api/v1/orders` — Create order [AUTH]
+  - [x] `GET /api/v1/orders` — List orders [AUTH] (customer: own, admin: all)
+  - [x] `GET /api/v1/orders/:id` — Get order detail [AUTH] (customer: own only)
+  - [x] `PATCH /api/v1/orders/:id/status` — Update status [AUTH, ADMIN]
   - [ ] `POST /internal/orders/:id/payment-status` — Callback dari payment-service (internal)
 - [ ] **Custom Prometheus Metrics**
   - [ ] `order_created_total` (counter)
   - [ ] `order_status_changes_total` (counter, label: from_status, to_status)
   - [ ] `order_handler_duration_seconds` (histogram, label: method, route)
   - [ ] `order_db_queries_total` (counter, label: operation)
-- [ ] **Middleware**
-  - [ ] Auth middleware (JWT validation — parse token, extract user_id & role)
-  - [ ] RequireRole middleware (admin-only endpoints)
-  - [ ] CORS middleware
+- [x] **Middleware**
+  - [x] Auth middleware (JWT validation — parse token, extract user_id & role)
+  - [x] RequireRole middleware (admin-only endpoints)
+  - [x] CORS middleware
 - [ ] **Testing**
   - [ ] Unit tests untuk service layer (create order, ownership check, status transition)
   - [ ] Unit tests untuk repository layer
@@ -262,8 +262,8 @@
   - [ ] `payment_webhooks_received_total` (counter, label: transaction_status)
   - [ ] `payment_handler_duration_seconds` (histogram, label: method, route)
 - [ ] **Middleware**
-  - [ ] Auth middleware (JWT validation — parse token, extract user_id & role)
-  - [ ] CORS middleware
+  - [x] Auth middleware (JWT validation — parse token, extract user_id - [ ] Auth middleware (JWT validation — parse token, extract user_id & role) role)
+  - [x] CORS middleware
 - [ ] **Testing**
   - [ ] Unit tests untuk service layer (create payment, webhook handling, signature verification)
   - [ ] Unit tests untuk repository layer
