@@ -278,6 +278,8 @@
 - [x] Verifikasi routing untuk semua endpoint baru
 
 ### 3.8 Infrastructure Updates
+- [x] Upgrade `GET /health` pada semua microservice menjadi database-aware readiness check + unit test
+- [x] Normalisasi casing direktori Git menjadi lowercase (`api-gateway`, `microservices`) untuk kompatibilitas Linux/GKE
 - [x] Update `docker-compose.yml` — tambah order-db, payment-db, order-service, payment-service
 - [x] Update `.env.example` — tambah env vars untuk order - [ ] Update `.env.example` — tambah env vars untuk order & payment service + Midtrans keys payment service + Midtrans keys
 - [x] Update `prometheus.yml` — tambah scrape target order-service - [ ] Update `prometheus.yml` — tambah scrape target order-service & payment-service payment-service

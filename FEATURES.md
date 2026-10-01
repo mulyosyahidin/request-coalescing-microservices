@@ -24,7 +24,7 @@ Menangani registrasi, login, validasi token JWT, dan **pengelolaan role (RBAC)**
 | A2  | Login                  | User login, menerima access token (JWT) yang berisi claim `role`           |
 | A3  | Token Validation       | Endpoint internal untuk service lain memvalidasi token & mengekstrak claims|
 | A4  | Admin Seed/Provisioning| Mekanisme internal untuk membuat akun admin (seed data / endpoint internal)|
-| A5  | Health Check           | Endpoint `/health` untuk readiness/liveness probe                          |
+| A5  | Health Check           | Endpoint `/health` untuk readiness probe service dan PostgreSQL            |
 | A6  | Metrics                | Endpoint `/metrics` untuk Prometheus scraping                              |
 
 ### Gambaran Endpoint
@@ -34,7 +34,7 @@ POST   /api/v1/auth/register          → Registrasi user baru (role = customer)
 POST   /api/v1/auth/login             → Login, return JWT (berisi role)
 POST   /internal/auth/validate        → Validasi token (internal, non-public)
 POST   /internal/auth/admin           → Buat akun admin (internal, non-public)
-GET    /health                         → Health check
+GET    /health                         → Readiness check (termasuk koneksi PostgreSQL)
 GET    /metrics                        → Prometheus metrics
 ```
 
@@ -100,7 +100,7 @@ Mengelola data produk (CRUD). Menjadi **target utama** eksperimen request coales
 | P5  | Delete Product              | Menghapus produk (admin-only)                                         |
 | P6  | Seed Products               | Endpoint/script untuk populate data awal (testing)                    |
 | P7  | Cache Invalidation (Internal)| Endpoint internal untuk reset cache (digunakan oleh K6 setup)        |
-| P8  | Health Check                | Endpoint `/health`                                                    |
+| P8  | Health Check                | Endpoint `/health` untuk readiness service dan PostgreSQL             |
 | P9  | Metrics                     | Endpoint `/metrics` dengan custom metric (DB hit count, cache stats)  |
 
 ### Gambaran Endpoint
@@ -128,7 +128,7 @@ DELETE /internal/cache/products/:id   → Invalidate cache untuk produk tertentu
 
 #### ⚙️ Infrastruktur
 ```
-GET    /health                         → Health check
+GET    /health                         → Readiness check (termasuk koneksi PostgreSQL)
 GET    /metrics                        → Prometheus metrics
 ```
 
@@ -170,7 +170,7 @@ Mengelola pesanan (orders) dari customer. Bertanggung jawab atas lifecycle order
 | O3  | List User Orders     | Daftar pesanan — customer: miliknya saja, admin: seluruh order                  |
 | O4  | Update Order Status  | Ubah status pesanan — hanya admin yang bisa mengubah status                     |
 | O5  | Payment Callback     | Endpoint internal untuk menerima update status pembayaran dari payment-service  |
-| O6  | Health Check         | Endpoint `/health`                                                              |
+| O6  | Health Check         | Endpoint `/health` untuk readiness service dan PostgreSQL                       |
 | O7  | Metrics              | Endpoint `/metrics`                                                             |
 
 ### Gambaran Endpoint
@@ -198,7 +198,7 @@ POST   /internal/orders/:id/payment-status  → Callback dari payment-service (u
 
 #### ⚙️ Infrastruktur
 ```
-GET    /health                         → Health check
+GET    /health                         → Readiness check (termasuk koneksi PostgreSQL)
 GET    /metrics                        → Prometheus metrics
 ```
 
@@ -357,7 +357,7 @@ Mengelola pembayaran melalui **Midtrans Snap**. Bertanggung jawab atas pembuatan
 | PM3 | Get Payment by Order ID  | Lihat status pembayaran berdasarkan order ID                                 |
 | PM4 | Midtrans Webhook         | Terima & proses notification callback dari Midtrans (signature verification) |
 | PM5 | Order Status Callback    | Notify order-service saat pembayaran berhasil/gagal/expired                  |
-| PM6 | Health Check             | Endpoint `/health`                                                           |
+| PM6 | Health Check             | Endpoint `/health` untuk readiness service dan PostgreSQL                    |
 | PM7 | Metrics                  | Endpoint `/metrics`                                                          |
 
 ### Gambaran Endpoint
@@ -383,7 +383,7 @@ POST   /api/v1/payments/notification   → Midtrans webhook callback
 
 #### ⚙️ Infrastruktur
 ```
-GET    /health                         → Health check
+GET    /health                         → Readiness check (termasuk koneksi PostgreSQL)
 GET    /metrics                        → Prometheus metrics
 ```
 

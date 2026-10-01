@@ -78,12 +78,7 @@ func main() {
 	})
 	r.Use(corsMiddleware.Handler)
 
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		handler.RespondSuccess(w, http.StatusOK, "Service is healthy", map[string]string{
-			"status":  "up",
-			"service": ServiceName,
-		})
-	})
+	r.Get("/health", handler.NewHealthHandler(ServiceName, dbpool))
 	r.Handle("/metrics", promhttp.Handler())
 
 	// Welcome Root Endpoint

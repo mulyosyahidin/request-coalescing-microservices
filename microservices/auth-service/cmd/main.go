@@ -60,18 +60,13 @@ func main() {
 			"status":  "ok",
 		})
 	})
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		handler.RespondSuccess(w, http.StatusOK, "Service is healthy", map[string]string{
-			"status":  "up",
-			"service": "auth-service",
-		})
-	})
+	r.Get("/health", handler.NewHealthHandler("auth-service", dbpool))
 	r.Handle("/metrics", promhttp.Handler())
 
 	r.Route("/api/v1/auth", func(r chi.Router) {
 		r.Post("/register", authHandler.HandleRegister)
 		r.Post("/login", authHandler.HandleLogin)
-		
+
 		// Protected routes
 		r.Group(func(r chi.Router) {
 			r.Use(authmiddleware.AuthMiddleware(cfg.JWTSecret))
