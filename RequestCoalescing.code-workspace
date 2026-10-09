@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "name": "RequestCoalescing",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "client-app/node_modules": true,
+      "client-app/.next": true,
+      "microservices/**/bin": true
+    }
+  }
+}

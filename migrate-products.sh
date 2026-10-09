@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 # migrate-products.sh
 # Menjalankan migrasi database untuk product-service menggunakan container golang-migrate
 

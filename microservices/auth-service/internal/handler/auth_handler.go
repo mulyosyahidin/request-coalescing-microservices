@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -169,6 +170,7 @@ func (h *AuthHandler) HandleCreateAdmin(w http.ResponseWriter, r *http.Request) 
 			RespondError(w, http.StatusConflict, "USER_ALREADY_EXISTS", "User with this email already exists")
 			return
 		}
+		slog.Error("failed to create admin user", "err", err)
 		RespondError(w, http.StatusInternalServerError, "INTERNAL_SERVER_ERROR", "Failed to create admin user")
 		return
 	}
