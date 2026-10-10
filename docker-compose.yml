@@ -23,6 +23,12 @@ volumes:
   grafana_data:
   loki_data:
 
+x-service-logging: &service-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "1"
+
 services:
   swagger-ui:
     image: swaggerapi/swagger-ui:latest
@@ -103,7 +109,6 @@ services:
     networks:
       - rc-network
 
-
   # ============================================================================
   # 2. Golang Microservices
   # ============================================================================
@@ -124,6 +129,7 @@ services:
     depends_on:
       auth-db:
         condition: service_healthy
+    logging: *service-logging
     networks:
       - rc-network
 
@@ -149,6 +155,7 @@ services:
     depends_on:
       product-db:
         condition: service_healthy
+    logging: *service-logging
     networks:
       - rc-network
 
@@ -171,6 +178,7 @@ services:
     depends_on:
       order-db:
         condition: service_healthy
+    logging: *service-logging
     networks:
       - rc-network
 
@@ -309,13 +317,24 @@ services:
     depends_on:
       payment-db:
         condition: service_healthy
+    logging: *service-logging
     networks:
       - rc-network
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    build:
+      context: ./observability/cadvisor
+    image: request-coalescing-cadvisor:v0.54.0
     container_name: cadvisor
     restart: unless-stopped
+    # Host cgroup and pid namespaces so cAdvisor can see each container,
+    # including the Postgres databases, instead of only the machine root.
+    pid: host
+    cgroup: host
+    command:
+      - --housekeeping_interval=10s
+      - --store_container_labels=false
+      - --containerd=/var/run/docker/containerd/containerd.sock
     ports:
       - "8099:8080"
     volumes:

@@ -23,7 +23,7 @@
       "title": "K6 Request Rate (Throughput)",
       "type": "timeseries",
       "datasource": "Prometheus",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
       "targets": [
         {
           "expr": "rate(k6_http_reqs_total[$__rate_interval])",
@@ -35,7 +35,7 @@
       "title": "K6 Request Duration (Latency p99)",
       "type": "timeseries",
       "datasource": "Prometheus",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
       "targets": [
         {
           "expr": "k6_http_req_duration_p99",
@@ -47,7 +47,7 @@
       "title": "Database Queries (Product Service)",
       "type": "timeseries",
       "datasource": "Prometheus",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
       "targets": [
         {
           "expr": "sum(rate(product_db_queries_total{operation=\"select_one\"}[$__rate_interval]))",
@@ -59,7 +59,7 @@
       "title": "API Gateway Load (KrakenD)",
       "type": "timeseries",
       "datasource": "Prometheus",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
       "targets": [
         {
           "expr": "sum(rate(opencensus_io_http_server_request_count[$__rate_interval]))",

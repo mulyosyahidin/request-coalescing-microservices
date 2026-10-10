@@ -2,4 +2,5 @@
 .DS_Store
 **/bin/
 **/coverage.out
+observability/cadvisor/cadvisor
 

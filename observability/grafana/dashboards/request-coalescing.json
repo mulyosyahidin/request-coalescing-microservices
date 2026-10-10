@@ -587,7 +587,7 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "rate(container_cpu_usage_seconds_total{name=~\".*-db\"}[1m])",
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\"^(auth|product|order|payment)-db$\"}[1m])",
           "legendFormat": "{{name}}"
         }
       ],
@@ -617,7 +617,7 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "container_memory_usage_bytes{name=~\".*-db\"}",
+          "expr": "container_memory_usage_bytes{name=~\"^(auth|product|order|payment)-db$\"}",
           "legendFormat": "{{name}}"
         }
       ],
