@@ -9,8 +9,8 @@ import { decodeJwt } from "jose";
 import { logoutAction } from "./actions/auth";
 
 export const metadata: Metadata = {
-  title: "RequestCoalescing Store",
-  description: "E-Commerce demonstration app for API Gateway Request Coalescing experiments",
+  title: "Toko",
+  description: "Shop everyday products online.",
 };
 
 export default async function RootLayout({
@@ -33,6 +33,7 @@ export default async function RootLayout({
   }
   
   const dashboardLink = role === "admin" ? "/admin/dashboard" : "/customer/dashboard";
+  const accountLabel = role === "admin" ? "Admin" : "Account";
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -51,17 +52,12 @@ export default async function RootLayout({
                 {/* Brand Logo */}
                 <div className="flex items-center space-x-3">
                   <a href="/" className="flex items-center space-x-2">
-                    <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold shadow-md shadow-indigo-200">
-                      RC
+                    <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                      T
                     </div>
-                    <div>
-                      <span className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                        CoalesceStore
-                      </span>
-                      <span className="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-medium bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full border border-indigo-200 dark:border-gray-800">
-                        Experiment Mode
-                      </span>
-                    </div>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">
+                      Toko
+                    </span>
                   </a>
                 </div>
 
@@ -85,7 +81,7 @@ export default async function RootLayout({
                         href={dashboardLink}
                         className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                       >
-                        Dashboard
+                        {accountLabel}
                       </a>
                       <form action={logoutAction}>
                         <button className="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition">
@@ -125,17 +121,17 @@ export default async function RootLayout({
               <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center text-white text-xs font-bold">
-                    RC
+                    T
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    © 2026 RequestCoalescing Project — KrakenD + Go Microservices + Next.js
+                    © 2026 Toko. Shop everyday products online.
                   </p>
                 </div>
                 <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
                   <a href="/products" className="hover:text-indigo-600 transition">Products</a>
                   <a href="/cart" className="hover:text-indigo-600 transition">Cart</a>
                   {isAuthenticated ? (
-                    <a href={dashboardLink} className="hover:text-indigo-600 transition">Dashboard</a>
+                    <a href={dashboardLink} className="hover:text-indigo-600 transition">{accountLabel}</a>
                   ) : (
                     <>
                       <a href="/login" className="hover:text-indigo-600 transition">Login</a>

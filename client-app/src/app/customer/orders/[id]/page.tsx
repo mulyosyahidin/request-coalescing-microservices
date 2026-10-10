@@ -57,7 +57,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         
         <div className="flex items-center gap-4 mb-8">
           <Link href="/customer/dashboard" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
-            &larr; Back to Dashboard
+            &larr; Back to account
           </Link>
         </div>
 
@@ -71,7 +71,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div className="p-6 sm:p-8 border-b border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold">Order Details</h1>
-                <p className="text-sm font-mono text-gray-500 mt-1">ID: {order.id}</p>
+                <p className="text-sm text-gray-500 mt-1">Order {order.id.split("-")[0]}</p>
               </div>
               <div className="flex flex-col sm:items-end gap-2">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
@@ -124,7 +124,6 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                     Please complete your payment to process this order.
                   </p>
                   <PayNowButton orderId={order.id} />
-                  <p className="text-xs text-gray-500 mt-3 italic">* Powered by Midtrans Snap</p>
                 </div>
               )}
             </div>

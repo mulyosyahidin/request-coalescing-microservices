@@ -66,21 +66,21 @@ export default async function AdminOrdersIndexPage({ searchParams }: { searchPar
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Link href="/admin/dashboard" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
-              &larr; Back to Dashboard
+              &larr; Back to admin
             </Link>
-            <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 ml-4 flex items-center gap-2">
-              All Global Orders <span className="text-sm font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded uppercase ml-2 tracking-widest">Admin</span>
+            <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 ml-4">
+              Orders
             </h1>
           </div>
           <div>
-            <p className="text-sm text-gray-500 font-medium">Total platform orders: <span className="font-bold text-gray-900 dark:text-gray-100">{total}</span></p>
+            <p className="text-sm text-gray-500 font-medium">Total: <span className="font-bold text-gray-900 dark:text-gray-100">{total}</span></p>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 sm:p-8">
           {orders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800/50">
-              <p className="text-gray-500 dark:text-gray-400">No orders found on the platform yet.</p>
+              <p className="text-gray-500 dark:text-gray-400">No orders yet.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -89,7 +89,7 @@ export default async function AdminOrdersIndexPage({ searchParams }: { searchPar
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Order ID</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer ID</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Amount</th>
                     <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>

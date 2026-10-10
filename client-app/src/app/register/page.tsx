@@ -23,14 +23,11 @@ export default function RegisterPage() {
       <div className="w-full max-w-md bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-6">
         {/* Card Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-800/40 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mx-auto shadow-inner">
-            ✨
-          </div>
-          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">
-            Create an Account
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Create an account
           </h1>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            Register to test auth-service JWT generation and mock shopping flows.
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Save your details so you can check out and follow your orders.
           </p>
         </div>
 
@@ -98,19 +95,6 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div className="flex items-start">
-            <input
-              id="terms"
-              type="checkbox"
-              defaultChecked
-              required
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-700 rounded mt-0.5"
-            />
-            <label htmlFor="terms" className="ml-2 block text-xs text-gray-600 dark:text-gray-400">
-              I agree to the <a href="#" className="text-indigo-600 underline">Terms of Service</a> and <a href="#" className="text-indigo-600 underline">Privacy Policy</a>
-            </label>
-          </div>
-
           <button
             type="submit"
             disabled={isPending}
@@ -119,21 +103,6 @@ export default function RegisterPage() {
             {isPending ? "Registering..." : "Create Account"}
           </button>
         </form>
-
-        {/* RBAC Notice */}
-        <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-3.5 text-xs text-amber-900 dark:text-amber-200 space-y-1.5 shadow-sm">
-          <div className="font-bold flex items-center gap-1.5 text-amber-900 dark:text-amber-200">
-            <span>ℹ️</span>
-            <span>Default Role Assignment</span>
-          </div>
-          <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
-            All public registrations automatically receive the{" "}
-            <code className="bg-amber-100 dark:bg-amber-900/80 text-amber-900 dark:text-amber-200 font-mono px-1.5 py-0.5 rounded text-[10px] border border-amber-200 dark:border-amber-700/60">
-              customer
-            </code>{" "}
-            role. Admin accounts are provisioned via internal seed.
-          </p>
-        </div>
 
         {/* Footer Link to Login */}
         <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-800">

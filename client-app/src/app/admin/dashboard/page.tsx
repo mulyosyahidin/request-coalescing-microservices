@@ -67,11 +67,9 @@ export default async function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 p-8">
       <div className="max-w-6xl mx-auto space-y-8">
-        <header className="flex justify-between items-center bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 border-l-4 border-l-red-500">
+        <header className="flex justify-between items-center bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <span className="text-red-500">🛡️</span> Admin Dashboard
-            </h1>
+            <h1 className="text-2xl font-bold">Store admin</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {displayName}</p>
           </div>
           <form action={logoutAction}>
@@ -86,12 +84,6 @@ export default async function AdminDashboard() {
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 col-span-1 md:col-span-1">
             <h2 className="text-lg font-semibold mb-4">Profile</h2>
             <div className="space-y-4">
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">User ID</p>
-                <p className="text-xs font-mono truncate bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1">
-                  {jwtPayload.sub}
-                </p>
-              </div>
               <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Name</p>
                 <p className="text-sm font-medium mt-1">{userProfile?.name || "-"}</p>
@@ -115,10 +107,7 @@ export default async function AdminDashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Product Management */}
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Products Management</h2>
-                  <span className="text-2xl">📦</span>
-                </div>
+                <h2 className="text-lg font-semibold mb-4">Products</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                   Add, update, or remove products from the catalog.
                 </p>
@@ -129,12 +118,9 @@ export default async function AdminDashboard() {
 
               {/* Order Management */}
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Orders Overview</h2>
-                  <span className="text-2xl">📋</span>
-                </div>
+                <h2 className="text-lg font-semibold mb-4">Orders</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Total Orders: {orders.length}
+                  Recent orders: {orders.length}
                 </p>
                 <Link href="/admin/orders" className="block text-center w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition">
                   View All Orders
@@ -145,7 +131,7 @@ export default async function AdminDashboard() {
             {/* Recent Global Orders List */}
             <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Recent Global Orders</h2>
+                <h2 className="text-lg font-semibold">Recent orders</h2>
                 <Link href="/admin/orders" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
                   View All &rarr;
                 </Link>
@@ -154,7 +140,7 @@ export default async function AdminDashboard() {
               {orders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 bg-gray-50 dark:bg-gray-950/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    No orders have been placed on the platform yet.
+                    No orders yet.
                   </p>
                 </div>
               ) : (
@@ -169,7 +155,7 @@ export default async function AdminDashboard() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Customer ID</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Customer</p>
                           <p className="text-sm font-mono mt-0.5" title={order.user_id}>
                             {order.user_id.split("-")[0]}...
                           </p>

@@ -65,7 +65,7 @@ export default async function CustomerOrdersIndexPage({ searchParams }: { search
         
         <div className="flex items-center gap-4 mb-8">
           <Link href="/customer/dashboard" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
-            &larr; Back to Dashboard
+            &larr; Back to account
           </Link>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 ml-4">My Orders</h1>
         </div>
@@ -73,8 +73,7 @@ export default async function CustomerOrdersIndexPage({ searchParams }: { search
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 sm:p-8">
           {orders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <span className="text-4xl mb-2">🛒</span>
-              <p className="text-gray-500 dark:text-gray-400">You haven't placed any orders yet.</p>
+              <p className="text-gray-500 dark:text-gray-400">You have not placed an order yet.</p>
               <Link 
                 href="/products" 
                 className="mt-6 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition"

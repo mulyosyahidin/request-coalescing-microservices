@@ -48,10 +48,10 @@ export async function registerAction(prevState: any, formData: FormData) {
       return { success: true, role };
     }
 
-    return { error: "No token received", fields };
+    return { error: "Account could not be created. Please try again.", fields };
   } catch (error: any) {
     console.error("Register action error:", error?.response?.data || error.message);
-    const errorMessage = error?.response?.data?.message || "Registration failed. Is the API Gateway running?";
+    const errorMessage = error?.response?.data?.message || "Registration failed. Please try again.";
     return { error: errorMessage, fields };
   }
 }
@@ -92,7 +92,7 @@ export async function loginAction(prevState: any, formData: FormData) {
       return { success: true, role };
     }
 
-    return { error: "No token received", fields };
+    return { error: "Sign-in could not be completed. Please try again.", fields };
   } catch (error: any) {
     console.error("Login action error:", error?.response?.data || error.message);
     const errorMessage = error?.response?.data?.message || "Login failed. Please check your credentials.";

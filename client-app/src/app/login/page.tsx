@@ -23,14 +23,11 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-6">
         {/* Card Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-800/40 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mx-auto shadow-inner">
-            🔐
-          </div>
-          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100">
-            Welcome Back
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Sign in
           </h1>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            Sign in to access your account and shopping flows.
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Use your account to check out and view your orders.
           </p>
         </div>
 
@@ -57,14 +54,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300">
-                Password
-              </label>
-              <a href="#" className="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
-                Forgot password?
-              </a>
-            </div>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -75,18 +67,6 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              type="checkbox"
-              defaultChecked
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-700 rounded"
-            />
-            <label htmlFor="remember-me" className="ml-2 block text-xs text-gray-600 dark:text-gray-400">
-              Remember this device for 30 days
-            </label>
-          </div>
-
           <button
             type="submit"
             disabled={isPending}
@@ -95,21 +75,6 @@ export default function LoginPage() {
             {isPending ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        {/* RBAC Info Card */}
-        <div className="bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/60 rounded-2xl p-3.5 text-xs text-indigo-800 dark:text-indigo-200 space-y-1.5 shadow-sm">
-          <div className="font-bold text-indigo-900 dark:text-indigo-200 flex items-center gap-1.5">
-            <span>🛡️</span>
-            <span>RBAC JWT Authentication</span>
-          </div>
-          <p className="text-[11px] text-indigo-700 dark:text-indigo-300 leading-relaxed">
-            Default public login returns JWT with{" "}
-            <code className="bg-indigo-100 dark:bg-indigo-900/80 text-indigo-900 dark:text-indigo-200 font-mono px-1.5 py-0.5 rounded text-[10px] border border-indigo-200 dark:border-indigo-700/60">
-              role: &quot;customer&quot;
-            </code>
-            .
-          </p>
-        </div>
 
         {/* Footer Link to Register */}
         <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-800">

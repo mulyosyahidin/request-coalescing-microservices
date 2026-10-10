@@ -71,14 +71,9 @@ export default async function PublicProductsPage({ searchParams }: { searchParam
                     {p.description || "No description provided."}
                   </p>
 
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4 pb-4 border-b border-gray-100 dark:border-gray-800">
-                    <div className="flex items-center text-amber-500 font-medium">
-                      ★ <span className="text-gray-700 dark:text-gray-300 ml-1">5.0</span>
-                    </div>
-                    <span className={p.stock > 0 ? "text-emerald-600 font-medium" : "text-red-500 font-medium"}>
-                      {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
-                    </span>
-                  </div>
+                  <p className={`text-xs font-medium mb-4 ${p.stock > 0 ? "text-emerald-600" : "text-red-500"}`}>
+                    {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
+                  </p>
 
                   <div className="mt-auto flex flex-col gap-3">
                     <div className="flex items-center justify-between">

@@ -43,7 +43,7 @@ export default function CartPage() {
       if (snapUrl) {
         window.location.href = snapUrl;
       } else {
-        alert("Order created successfully! Redirecting to dashboard...");
+        alert("Order placed. You can follow it from your account.");
         router.push("/customer/dashboard");
       }
     }

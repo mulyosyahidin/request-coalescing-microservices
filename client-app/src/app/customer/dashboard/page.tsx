@@ -70,8 +70,8 @@ export default async function CustomerDashboard() {
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex justify-between items-center bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div>
-            <h1 className="text-2xl font-bold">Customer Dashboard</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {displayName} 👋</p>
+            <h1 className="text-2xl font-bold">My account</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {displayName}</p>
           </div>
           <form action={logoutAction}>
             <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg text-sm font-medium transition">
@@ -86,24 +86,12 @@ export default async function CustomerDashboard() {
             <h2 className="text-lg font-semibold mb-4">Profile Information</h2>
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">User ID</p>
-                <p className="text-xs font-mono truncate bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1">
-                  {jwtPayload.sub}
-                </p>
-              </div>
-              <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Name</p>
                 <p className="text-sm font-medium mt-1">{userProfile?.name || "-"}</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Email</p>
                 <p className="text-sm font-medium mt-1">{jwtPayload.email}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Role</p>
-                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 mt-1">
-                  {jwtPayload.role}
-                </span>
               </div>
             </div>
           </div>
@@ -119,8 +107,7 @@ export default async function CustomerDashboard() {
             
             {orders.length === 0 ? (
               <div className="flex flex-col items-center justify-center flex-grow bg-gray-50 dark:bg-gray-950/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 py-12">
-                <span className="text-4xl mb-2">🛒</span>
-                <p className="text-sm text-gray-500 dark:text-gray-400">No orders found.</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">You have not placed an order yet.</p>
                 <Link 
                   href="/products" 
                   className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition"

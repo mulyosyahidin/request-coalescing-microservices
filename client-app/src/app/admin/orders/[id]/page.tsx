@@ -64,7 +64,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
         
         <div className="flex items-center gap-4 mb-8">
           <Link href="/admin/dashboard" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
-            &larr; Back to Admin Dashboard
+            &larr; Back to admin
           </Link>
         </div>
 
@@ -77,11 +77,9 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
             <div className="p-6 sm:p-8 border-b border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-red-50/30 dark:bg-red-900/10">
               <div>
-                <h1 className="text-2xl font-bold flex items-center gap-2">
-                   Order Details <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded font-bold">ADMIN VIEW</span>
-                </h1>
-                <p className="text-sm font-mono text-gray-500 mt-1">ID: {order.id}</p>
-                <p className="text-sm font-mono text-indigo-600 dark:text-indigo-400 mt-1">User ID: {order.user_id}</p>
+                <h1 className="text-2xl font-bold">Order</h1>
+                <p className="text-sm text-gray-500 mt-1">Order {order.id.split("-")[0]}</p>
+                <p className="text-sm text-gray-500 mt-1">Customer {order.user_id.split("-")[0]}</p>
               </div>
               <div className="flex flex-col sm:items-end gap-2">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
@@ -129,20 +127,6 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
                 </div>
               </div>
               
-              {/* Admin Actions Box */}
-              <div className="mt-10 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                 <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Admin Actions</h3>
-                 <div className="flex gap-4">
-                    <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
-                      Mark as Paid
-                    </button>
-                    <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition shadow-sm">
-                      Cancel Order
-                    </button>
-                 </div>
-                 <p className="text-xs text-gray-500 mt-3 italic">* Actions are mockups for now</p>
-              </div>
-
             </div>
           </div>
         )}
