@@ -8,7 +8,7 @@ export async function createPaymentAction(orderId: string) {
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    return { success: false, message: "Unauthorized" };
+    return { success: false, message: "Tidak diizinkan" };
   }
 
   try {
@@ -27,7 +27,7 @@ export async function createPaymentAction(orderId: string) {
     console.error("Failed to create payment:", error?.response?.data || error);
     return {
       success: false,
-      message: error?.response?.data?.message || "Failed to create payment",
+      message: error?.response?.data?.message || "Gagal membuat pembayaran",
     };
   }
 }

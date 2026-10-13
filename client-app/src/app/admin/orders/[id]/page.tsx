@@ -5,6 +5,23 @@ import { OrderDetailResponse, Order } from "@/types/order";
 import { decodeJwt } from "jose";
 import Link from "next/link";
 
+function getStatusLabel(status: string) {
+  switch (status) {
+    case "paid":
+      return "Dibayar";
+    case "completed":
+      return "Selesai";
+    case "pending_payment":
+      return "Menunggu pembayaran";
+    case "cancelled":
+      return "Dibatalkan";
+    case "expired":
+      return "Kedaluwarsa";
+    default:
+      return status.replace("_", " ");
+  }
+}
+
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const cookieStore = await cookies();
@@ -32,11 +49,11 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
     if (res.data?.success) {
       order = res.data.data;
     } else {
-      errorMsg = res.data?.message || "Order not found";
+      errorMsg = res.data?.message || "Pesanan tidak ditemukan";
     }
   } catch (error: any) {
     console.error("Failed to fetch order detail:", error?.response?.data || error);
-    errorMsg = error?.response?.data?.message || "Failed to load order details.";
+    errorMsg = error?.response?.data?.message || "Gagal memuat detail pesanan.";
   }
 
   const formatRupiah = (price: number) => {
@@ -64,36 +81,36 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
         
         <div className="flex items-center gap-4 mb-8">
           <Link href="/admin/dashboard" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
-            &larr; Back to admin
+            &larr; Kembali ke admin
           </Link>
         </div>
 
         {errorMsg || !order ? (
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-12 text-center shadow-sm border border-gray-200 dark:border-gray-800">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error</h1>
-            <p className="text-gray-500 dark:text-gray-400">{errorMsg || "Order could not be loaded."}</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Kesalahan</h1>
+            <p className="text-gray-500 dark:text-gray-400">{errorMsg || "Pesanan tidak dapat dimuat."}</p>
           </div>
         ) : (
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
             <div className="p-6 sm:p-8 border-b border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-red-50/30 dark:bg-red-900/10">
               <div>
-                <h1 className="text-2xl font-bold">Order</h1>
-                <p className="text-sm text-gray-500 mt-1">Order {order.id.split("-")[0]}</p>
-                <p className="text-sm text-gray-500 mt-1">Customer {order.user_id.split("-")[0]}</p>
+                <h1 className="text-2xl font-bold">Pesanan</h1>
+                <p className="text-sm text-gray-500 mt-1">Pesanan {order.id.split("-")[0]}</p>
+                <p className="text-sm text-gray-500 mt-1">Pelanggan {order.user_id.split("-")[0]}</p>
               </div>
               <div className="flex flex-col sm:items-end gap-2">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
-                  {order.status.replace("_", " ")}
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold tracking-wider ${getStatusColor(order.status)}`}>
+                  {getStatusLabel(order.status)}
                 </span>
                 <p className="text-xs text-gray-500">
-                  Placed on {new Date(order.created_at).toLocaleString()}
+                  Dibuat pada {new Date(order.created_at).toLocaleString("id-ID")}
                 </p>
               </div>
             </div>
 
             <div className="p-6 sm:p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-semibold">Items Ordered</h2>
+                <h2 className="text-lg font-semibold">Item Dipesan</h2>
               </div>
               
               <ul className="divide-y divide-gray-200 dark:divide-gray-800 border-t border-b border-gray-200 dark:border-gray-800">

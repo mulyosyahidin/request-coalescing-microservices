@@ -24,10 +24,10 @@ export default function RegisterPage() {
         {/* Card Header */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Create an account
+            Buat akun
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Save your details so you can check out and follow your orders.
+            Simpan data Anda agar bisa checkout dan memantau pesanan.
           </p>
         </div>
 
@@ -41,13 +41,13 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-              Full Name
+              Nama Lengkap
             </label>
             <input
               type="text"
               name="name"
               defaultValue={state?.fields?.name || ""}
-              placeholder="Alice Smith"
+              placeholder="Budi Santoso"
               required
               className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
             />
@@ -55,13 +55,13 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-              Email Address
+              Alamat Email
             </label>
             <input
               type="email"
               name="email"
               defaultValue={state?.fields?.email || ""}
-              placeholder="alice@example.com"
+              placeholder="budi@example.com"
               required
               className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
             />
@@ -69,7 +69,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-              Password
+              Kata Sandi
             </label>
             <input
               type="password"
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-              Confirm Password
+              Konfirmasi Kata Sandi
             </label>
             <input
               type="password"
@@ -100,15 +100,15 @@ export default function RegisterPage() {
             disabled={isPending}
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition"
           >
-            {isPending ? "Registering..." : "Create Account"}
+            {isPending ? "Sedang mendaftar..." : "Buat Akun"}
           </button>
         </form>
 
         {/* Footer Link to Login */}
         <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-800">
-          Already have an account?{" "}
+          Sudah punya akun?{" "}
           <a href="/login" className="font-semibold text-indigo-600 hover:text-indigo-800">
-            Sign in
+            Masuk
           </a>
         </div>
       </div>

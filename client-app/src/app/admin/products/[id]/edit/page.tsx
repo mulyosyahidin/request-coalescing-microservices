@@ -42,9 +42,9 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   if (!product) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+        <h1 className="text-2xl font-bold mb-4">Produk Tidak Ditemukan</h1>
         <Link href="/admin/products" className="text-blue-600 hover:underline">
-          &larr; Back to Products
+          &larr; Kembali ke Produk
         </Link>
       </div>
     );
@@ -55,9 +55,9 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
           <Link href={`/admin/products/${product.id}`} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-            &larr; Back to Detail
+            &larr; Kembali ke Detail
           </Link>
-          <h1 className="text-2xl font-bold">Edit Product</h1>
+          <h1 className="text-2xl font-bold">Ubah Produk</h1>
         </div>
 
         <EditProductForm product={product} />

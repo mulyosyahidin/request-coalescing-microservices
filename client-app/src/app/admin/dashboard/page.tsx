@@ -6,6 +6,23 @@ import { apiClient } from "@/lib/axios";
 import { ListOrdersResponse, Order } from "@/types/order";
 import Link from "next/link";
 
+function getStatusLabel(status: string) {
+  switch (status) {
+    case "paid":
+      return "Dibayar";
+    case "completed":
+      return "Selesai";
+    case "pending_payment":
+      return "Menunggu pembayaran";
+    case "cancelled":
+      return "Dibatalkan";
+    case "expired":
+      return "Kedaluwarsa";
+    default:
+      return status.replace("_", " ");
+  }
+}
+
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -69,12 +86,12 @@ export default async function AdminDashboard() {
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex justify-between items-center bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div>
-            <h1 className="text-2xl font-bold">Store admin</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back, {displayName}</p>
+            <h1 className="text-2xl font-bold">Admin toko</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Selamat datang kembali, {displayName}</p>
           </div>
           <form action={logoutAction}>
             <button className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg text-sm font-medium transition">
-              Sign out
+              Keluar
             </button>
           </form>
         </header>
@@ -82,10 +99,10 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Admin Profile Card */}
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 col-span-1 md:col-span-1">
-            <h2 className="text-lg font-semibold mb-4">Profile</h2>
+            <h2 className="text-lg font-semibold mb-4">Profil</h2>
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Name</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Nama</p>
                 <p className="text-sm font-medium mt-1">{userProfile?.name || "-"}</p>
               </div>
               <div>
@@ -93,7 +110,7 @@ export default async function AdminDashboard() {
                 <p className="text-sm font-medium mt-1">{jwtPayload.email}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Role</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Peran</p>
                 <span className="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 mt-1">
                   {jwtPayload.role}
                 </span>
@@ -107,23 +124,23 @@ export default async function AdminDashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Product Management */}
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
-                <h2 className="text-lg font-semibold mb-4">Products</h2>
+                <h2 className="text-lg font-semibold mb-4">Produk</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Add, update, or remove products from the catalog.
+                  Tambah, ubah, atau hapus produk dari katalog.
                 </p>
                 <a href="/admin/products" className="block text-center w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">
-                  Manage Products
+                  Kelola Produk
                 </a>
               </div>
 
               {/* Order Management */}
               <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
-                <h2 className="text-lg font-semibold mb-4">Orders</h2>
+                <h2 className="text-lg font-semibold mb-4">Pesanan</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Recent orders: {orders.length}
+                  Pesanan terbaru: {orders.length}
                 </p>
                 <Link href="/admin/orders" className="block text-center w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition">
-                  View All Orders
+                  Lihat Semua Pesanan
                 </Link>
               </div>
             </div>
@@ -131,16 +148,16 @@ export default async function AdminDashboard() {
             {/* Recent Global Orders List */}
             <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Recent orders</h2>
+                <h2 className="text-lg font-semibold">Pesanan terbaru</h2>
                 <Link href="/admin/orders" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
-                  View All &rarr;
+                  Lihat Semua &rarr;
                 </Link>
               </div>
               
               {orders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 bg-gray-50 dark:bg-gray-950/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    No orders yet.
+                    Belum ada pesanan.
                   </p>
                 </div>
               ) : (
@@ -149,13 +166,13 @@ export default async function AdminDashboard() {
                     <div key={order.id} className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
                       <div className="bg-gray-50 dark:bg-gray-800/50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Order ID</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">ID Pesanan</p>
                           <p className="text-sm font-mono mt-0.5 text-indigo-600 dark:text-indigo-400">
                             {order.id.split("-")[0]}...
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Customer</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold tracking-wider">Pelanggan</p>
                           <p className="text-sm font-mono mt-0.5" title={order.user_id}>
                             {order.user_id.split("-")[0]}...
                           </p>
@@ -165,13 +182,13 @@ export default async function AdminDashboard() {
                           <p className="text-sm font-bold mt-0.5">{formatRupiah(order.total_amount)}</p>
                         </div>
                         <div>
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
-                            {order.status.replace("_", " ")}
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold tracking-wider ${getStatusColor(order.status)}`}>
+                            {getStatusLabel(order.status)}
                           </span>
                         </div>
                         <div>
                           <Link href={`/admin/orders/${order.id}`} className="px-3 py-1.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-xs font-semibold transition whitespace-nowrap">
-                            Review
+                            Tinjau
                           </Link>
                         </div>
                       </div>

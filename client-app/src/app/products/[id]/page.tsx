@@ -23,9 +23,9 @@ export default async function PublicProductDetail({ params }: { params: Promise<
   if (!product) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Product Not Found</h1>
+        <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Produk Tidak Ditemukan</h1>
         <Link href="/" className="text-blue-600 hover:underline">
-          &larr; Back to Home
+          &larr; Kembali ke Beranda
         </Link>
       </div>
     );
@@ -40,7 +40,7 @@ export default async function PublicProductDetail({ params }: { params: Promise<
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex items-center gap-4 mb-8">
           <Link href="/" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
-            &larr; Back to Home
+            &larr; Kembali ke Beranda
           </Link>
         </div>
 
@@ -50,7 +50,7 @@ export default async function PublicProductDetail({ params }: { params: Promise<
               <img src={product.photo_url} alt={product.name} className="w-full h-auto object-cover rounded-2xl shadow-sm" />
             ) : (
               <div className="w-full aspect-square bg-gray-200 dark:bg-gray-700 rounded-2xl flex items-center justify-center text-gray-400">
-                No Image Available
+                Tidak ada gambar
               </div>
             )}
           </div>
@@ -70,13 +70,13 @@ export default async function PublicProductDetail({ params }: { params: Promise<
                 product.stock > 0 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
                 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
               }`}>
-                {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                {product.stock > 0 ? `${product.stock} tersedia` : 'Stok habis'}
               </span>
             </div>
             
             <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 mb-10 flex-grow">
-              <h3 className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-3">Product Description</h3>
-              <p className="text-base leading-relaxed">{product.description || "No description provided."}</p>
+              <h3 className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-3">Deskripsi Produk</h3>
+              <p className="text-base leading-relaxed">{product.description || "Tidak ada deskripsi."}</p>
             </div>
             
             <div className="mt-auto">

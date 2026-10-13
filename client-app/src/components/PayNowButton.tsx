@@ -16,7 +16,7 @@ export default function PayNowButton({ orderId }: { orderId: string }) {
     if (res.success && res.data?.snap_url) {
       window.location.href = res.data.snap_url;
     } else {
-      setError(res.message || "Failed to process payment");
+      setError(res.message || "Gagal memproses pembayaran");
       setLoading(false);
     }
   };
@@ -28,7 +28,7 @@ export default function PayNowButton({ orderId }: { orderId: string }) {
         disabled={loading}
         className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-lg transition shadow-md w-full sm:w-auto"
       >
-        {loading ? "Processing..." : "Pay Now"}
+        {loading ? "Memproses..." : "Bayar Sekarang"}
       </button>
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
     </div>

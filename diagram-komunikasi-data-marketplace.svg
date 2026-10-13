@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1840" viewBox="0 0 1400 1840">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#30343b"/>
+    </marker>
+    <marker id="arrow-start" markerWidth="10" markerHeight="10" refX="1" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M9,0 L9,6 L0,3 z" fill="#30343b"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font: 700 34px Arial, sans-serif; fill: #1f2937; }
+      .subtitle { font: 400 18px Arial, sans-serif; fill: #596273; }
+      .stereotype { font: 400 17px Arial, sans-serif; fill: #4b5563; }
+      .name { font: 700 25px Arial, sans-serif; fill: #1f2937; }
+      .detail { font: 400 18px Arial, sans-serif; fill: #4b5563; }
+      .message { font: 500 17px Arial, sans-serif; fill: #20242a; }
+      .legend { font: 400 16px Arial, sans-serif; fill: #4b5563; }
+      .node { stroke: #30343b; stroke-width: 2; filter: url(#shadow); }
+      .client { fill: #eaf2ff; }
+      .gateway { fill: #dceaff; }
+      .service { fill: #fff4c7; }
+      .database { fill: #f3f4f6; }
+      .external { fill: #e8f5e9; }
+      .flow { fill: none; stroke: #30343b; stroke-width: 2.2; marker-end: url(#arrow); }
+      .both { marker-start: url(#arrow-start); }
+      .internal { fill: none; stroke: #5b6472; stroke-width: 2; stroke-dasharray: 8 6; marker-end: url(#arrow); }
+      .label-bg { fill: #ffffff; opacity: 0.94; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="1840" fill="#ffffff"/>
+
+  <text x="700" y="52" text-anchor="middle" class="title">Diagram Komunikasi Data Sistem Marketplace</text>
+  <text x="700" y="82" text-anchor="middle" class="subtitle">Arsitektur microservices melalui API Gateway KrakenD</text>
+
+  <!-- Client application -->
+  <rect x="440" y="112" width="520" height="112" rx="6" class="node client"/>
+  <text x="700" y="146" text-anchor="middle" class="stereotype">«client application»</text>
+  <text x="700" y="180" text-anchor="middle" class="name">Client Application</text>
+  <text x="700" y="207" text-anchor="middle" class="detail">Next.js</text>
+
+  <!-- API Gateway -->
+  <rect x="400" y="318" width="600" height="126" rx="6" class="node gateway"/>
+  <text x="700" y="352" text-anchor="middle" class="stereotype">«API gateway»</text>
+  <text x="700" y="386" text-anchor="middle" class="name">KrakenD</text>
+  <text x="700" y="416" text-anchor="middle" class="detail">Routing dan autentikasi JWT</text>
+
+  <!-- Client to gateway -->
+  <path d="M700 224 L700 318" class="flow both"/>
+  <rect x="718" y="253" width="286" height="30" rx="4" class="label-bg"/>
+  <text x="730" y="274" class="message">1. HTTPS request dan JSON response</text>
+
+  <!-- Gateway routing trunk -->
+  <path d="M400 381 L92 381 L92 1400" fill="none" stroke="#30343b" stroke-width="2.2"/>
+
+  <!-- Auth service -->
+  <rect x="170" y="525" width="550" height="132" rx="6" class="node service"/>
+  <text x="445" y="561" text-anchor="middle" class="stereotype">«microservice»</text>
+  <text x="445" y="596" text-anchor="middle" class="name">Auth Service</text>
+  <text x="445" y="628" text-anchor="middle" class="detail">Registrasi, login, JWT, dan role pengguna</text>
+
+  <path d="M92 591 L170 591" class="flow both"/>
+  <rect x="106" y="548" width="240" height="28" rx="4" class="label-bg"/>
+  <text x="116" y="568" class="message">2. Endpoint autentikasi</text>
+
+  <!-- Auth database -->
+  <ellipse cx="1110" cy="542" rx="175" ry="24" class="node database"/>
+  <path d="M935 542 L935 632 C935 646 1013 657 1110 657 C1207 657 1285 646 1285 632 L1285 542" class="node database" filter="none"/>
+  <text x="1110" y="583" text-anchor="middle" class="name">Auth Database</text>
+  <text x="1110" y="613" text-anchor="middle" class="detail">PostgreSQL · users</text>
+  <path d="M720 591 L935 591" class="flow both"/>
+  <rect x="747" y="551" width="171" height="28" rx="4" class="label-bg"/>
+  <text x="757" y="571" class="message">3. Data pengguna</text>
+
+  <!-- Product service -->
+  <rect x="170" y="765" width="550" height="132" rx="6" class="node service"/>
+  <text x="445" y="801" text-anchor="middle" class="stereotype">«microservice»</text>
+  <text x="445" y="836" text-anchor="middle" class="name">Product Service</text>
+  <text x="445" y="868" text-anchor="middle" class="detail">Katalog, detail, dan pengelolaan produk</text>
+
+  <path d="M92 831 L170 831" class="flow both"/>
+  <rect x="106" y="788" width="222" height="28" rx="4" class="label-bg"/>
+  <text x="116" y="808" class="message">4. Endpoint produk</text>
+
+  <!-- Product database -->
+  <ellipse cx="1110" cy="782" rx="175" ry="24" class="node database"/>
+  <path d="M935 782 L935 872 C935 886 1013 897 1110 897 C1207 897 1285 886 1285 872 L1285 782" class="node database" filter="none"/>
+  <text x="1110" y="823" text-anchor="middle" class="name">Product Database</text>
+  <text x="1110" y="853" text-anchor="middle" class="detail">PostgreSQL · products</text>
+  <path d="M720 831 L935 831" class="flow both"/>
+  <rect x="747" y="791" width="160" height="28" rx="4" class="label-bg"/>
+  <text x="757" y="811" class="message">5. Data produk</text>
+
+  <!-- Order service -->
+  <rect x="170" y="1005" width="550" height="132" rx="6" class="node service"/>
+  <text x="445" y="1041" text-anchor="middle" class="stereotype">«microservice»</text>
+  <text x="445" y="1076" text-anchor="middle" class="name">Order Service</text>
+  <text x="445" y="1108" text-anchor="middle" class="detail">Pembuatan dan pengelolaan status pesanan</text>
+
+  <path d="M92 1071 L170 1071" class="flow both"/>
+  <rect x="106" y="1028" width="226" height="28" rx="4" class="label-bg"/>
+  <text x="116" y="1048" class="message">6. Endpoint pesanan</text>
+
+  <!-- Order database -->
+  <ellipse cx="1110" cy="1022" rx="175" ry="24" class="node database"/>
+  <path d="M935 1022 L935 1112 C935 1126 1013 1137 1110 1137 C1207 1137 1285 1126 1285 1112 L1285 1022" class="node database" filter="none"/>
+  <text x="1110" y="1063" text-anchor="middle" class="name">Order Database</text>
+  <text x="1110" y="1093" text-anchor="middle" class="detail">orders · order_items</text>
+  <path d="M720 1071 L935 1071" class="flow both"/>
+  <rect x="747" y="1031" width="170" height="28" rx="4" class="label-bg"/>
+  <text x="757" y="1051" class="message">7. Data pesanan</text>
+
+  <!-- Order to product -->
+  <path d="M742 1038 L790 1038 L790 864 L720 864" class="internal"/>
+  <rect x="760" y="928" width="315" height="28" rx="4" class="label-bg"/>
+  <text x="770" y="948" class="message">8. Memeriksa produk dan harga</text>
+
+  <!-- Payment service -->
+  <rect x="170" y="1245" width="550" height="132" rx="6" class="node service"/>
+  <text x="445" y="1281" text-anchor="middle" class="stereotype">«microservice»</text>
+  <text x="445" y="1316" text-anchor="middle" class="name">Payment Service</text>
+  <text x="445" y="1348" text-anchor="middle" class="detail">Transaksi dan status pembayaran</text>
+
+  <path d="M92 1311 L170 1311" class="flow both"/>
+  <rect x="106" y="1268" width="250" height="28" rx="4" class="label-bg"/>
+  <text x="116" y="1288" class="message">9. Endpoint pembayaran</text>
+
+  <!-- Payment database -->
+  <ellipse cx="1110" cy="1262" rx="175" ry="24" class="node database"/>
+  <path d="M935 1262 L935 1352 C935 1366 1013 1377 1110 1377 C1207 1377 1285 1366 1285 1352 L1285 1262" class="node database" filter="none"/>
+  <text x="1110" y="1303" text-anchor="middle" class="name">Payment Database</text>
+  <text x="1110" y="1333" text-anchor="middle" class="detail">PostgreSQL · payments</text>
+  <path d="M720 1311 L935 1311" class="flow both"/>
+  <rect x="742" y="1271" width="193" height="28" rx="4" class="label-bg"/>
+  <text x="752" y="1291" class="message">10. Simpan data</text>
+
+  <!-- Payment to order -->
+  <path d="M720 1281 L835 1281 L835 1104 L720 1104" class="internal"/>
+  <rect x="798" y="1172" width="276" height="28" rx="4" class="label-bg"/>
+  <text x="808" y="1192" class="message">11. Mengambil detail pesanan</text>
+
+  <path d="M700 1350 L872 1350 L872 1074 L720 1074" class="internal"/>
+  <rect x="840" y="1211" width="323" height="28" rx="4" class="label-bg"/>
+  <text x="850" y="1231" class="message">15. Memperbarui status pesanan</text>
+
+  <!-- Midtrans -->
+  <rect x="300" y="1530" width="620" height="130" rx="65" class="node external"/>
+  <text x="610" y="1572" text-anchor="middle" class="stereotype">«external payment gateway»</text>
+  <text x="610" y="1610" text-anchor="middle" class="name">Midtrans</text>
+  <text x="610" y="1640" text-anchor="middle" class="detail">Snap payment</text>
+
+  <path d="M335 1377 L335 1535" class="flow"/>
+  <rect x="125" y="1434" width="273" height="28" rx="4" class="label-bg"/>
+  <text x="135" y="1454" class="message">12. Membuat transaksi Snap</text>
+
+  <path d="M500 1530 L500 1377" class="flow"/>
+  <rect x="510" y="1476" width="310" height="28" rx="4" class="label-bg"/>
+  <text x="520" y="1496" class="message">13. Snap token dan redirect URL</text>
+
+  <path d="M665 1530 L665 1377" class="flow"/>
+  <rect x="675" y="1408" width="305" height="28" rx="4" class="label-bg"/>
+  <text x="685" y="1428" class="message">14. Notifikasi status pembayaran</text>
+
+  <!-- Legend -->
+  <line x1="250" y1="1740" x2="320" y2="1740" class="flow both"/>
+  <text x="340" y="1746" class="legend">Pertukaran request dan response</text>
+  <line x1="760" y1="1740" x2="830" y2="1740" class="internal"/>
+  <text x="850" y="1746" class="legend">Komunikasi internal antar service</text>
+</svg>

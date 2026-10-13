@@ -43,7 +43,7 @@ export default function CartPage() {
       if (snapUrl) {
         window.location.href = snapUrl;
       } else {
-        alert("Order placed. You can follow it from your account.");
+        alert("Pesanan berhasil dibuat. Anda dapat memantaunya dari akun.");
         router.push("/customer/dashboard");
       }
     }
@@ -54,13 +54,13 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col justify-center items-center p-4">
-        <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Your Cart is Empty</h1>
-        <p className="text-gray-500 mb-8">Looks like you haven't added any products to your cart yet.</p>
+        <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Keranjang Anda Kosong</h1>
+        <p className="text-gray-500 mb-8">Sepertinya Anda belum menambahkan produk ke keranjang.</p>
         <Link
           href="/products"
           className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
         >
-          Browse Products
+          Jelajahi Produk
         </Link>
       </div>
     );
@@ -69,7 +69,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">Keranjang Belanja</h1>
         
         {error && (
           <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg">
@@ -85,7 +85,7 @@ export default function CartPage() {
                   {item.product.photo_url ? (
                     <img src={item.product.photo_url} alt={item.product.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No img</div>
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">Tanpa gambar</div>
                   )}
                 </div>
                 
@@ -98,7 +98,7 @@ export default function CartPage() {
                       {formatRupiah(item.product.price * item.quantity)}
                     </p>
                   </div>
-                  <p className="text-sm text-gray-500 mb-4">{formatRupiah(item.product.price)} each</p>
+                  <p className="text-sm text-gray-500 mb-4">{formatRupiah(item.product.price)} / pcs</p>
                   
                   <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -124,7 +124,7 @@ export default function CartPage() {
                       onClick={() => removeFromCart(item.product.id)}
                       className="text-sm font-medium text-red-600 hover:text-red-500 transition"
                     >
-                      Remove
+                      Hapus
                     </button>
                   </div>
                 </div>
@@ -141,7 +141,7 @@ export default function CartPage() {
             </div>
             
             <p className="text-sm text-gray-500 mb-6 text-right">
-              Shipping and taxes calculated at checkout.
+              Ongkir dan pajak dihitung saat checkout.
             </p>
             
             <button
@@ -149,7 +149,7 @@ export default function CartPage() {
               disabled={loading}
               className="w-full py-4 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-xl transition shadow-md flex justify-center items-center"
             >
-              {loading ? "Processing..." : "Checkout"}
+              {loading ? "Memproses..." : "Checkout"}
             </button>
           </div>
         </div>

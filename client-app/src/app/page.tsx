@@ -25,26 +25,26 @@ export default async function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
-                Online store
+                Toko online
               </p>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight">
-                Shop everyday products from home
+                Belanja kebutuhan sehari-hari dari rumah
               </h1>
               <p className="mt-5 text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-xl">
-                Browse the catalog, add items to your cart, and check out when you are ready. Prices and stock come straight from the store.
+                Jelajahi katalog, masukkan ke keranjang, lalu checkout kapan saja. Harga dan stok langsung dari toko.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
                 <Link
                   href="/products"
                   className="inline-flex justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition"
                 >
-                  Shop now
+                  Belanja sekarang
                 </Link>
                 <a
                   href="#featured"
                   className="inline-flex justify-center px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 >
-                  See featured products
+                  Lihat produk unggulan
                 </a>
               </div>
             </div>
@@ -52,18 +52,18 @@ export default async function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
               <div className="rounded-2xl bg-indigo-600 text-white p-6">
                 <p className="text-sm font-medium text-indigo-100">1</p>
-                <p className="mt-2 text-xl font-bold">Pick a product</p>
-                <p className="mt-1 text-sm text-indigo-100">Open the catalog and check the price and stock.</p>
+                <p className="mt-2 text-xl font-bold">Pilih produk</p>
+                <p className="mt-1 text-sm text-indigo-100">Buka katalog dan cek harga serta stok.</p>
               </div>
               <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 p-6">
                 <p className="text-sm font-medium text-gray-500">2</p>
-                <p className="mt-2 text-xl font-bold text-gray-900 dark:text-white">Add to cart</p>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Keep shopping, then review everything in one place.</p>
+                <p className="mt-2 text-xl font-bold text-gray-900 dark:text-white">Masukkan ke keranjang</p>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Lanjut belanja, lalu tinjau semuanya di satu tempat.</p>
               </div>
               <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 p-6">
                 <p className="text-sm font-medium text-gray-500">3</p>
-                <p className="mt-2 text-xl font-bold text-gray-900 dark:text-white">Check out</p>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Sign in, place the order, and follow it from your account.</p>
+                <p className="mt-2 text-xl font-bold text-gray-900 dark:text-white">Checkout</p>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Masuk, buat pesanan, dan pantau dari akun Anda.</p>
               </div>
             </div>
           </div>
@@ -73,16 +73,16 @@ export default async function Home() {
       <section className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
           <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Clear prices</p>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Every product shows its current price in rupiah.</p>
+            <p className="font-semibold text-gray-900 dark:text-white">Harga jelas</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Setiap produk menampilkan harga terkini dalam rupiah.</p>
           </div>
           <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Live stock</p>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">See what is available before you add it to the cart.</p>
+            <p className="font-semibold text-gray-900 dark:text-white">Stok real-time</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Lihat ketersediaan sebelum memasukkan ke keranjang.</p>
           </div>
           <div>
-            <p className="font-semibold text-gray-900 dark:text-white">Order history</p>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Signed-in customers can review their own orders.</p>
+            <p className="font-semibold text-gray-900 dark:text-white">Riwayat pesanan</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Pelanggan yang masuk dapat melihat pesanannya sendiri.</p>
           </div>
         </div>
       </section>
@@ -91,31 +91,31 @@ export default async function Home() {
         <div className="flex justify-between items-end mb-8 gap-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Featured products
+              Produk unggulan
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
-              A selection from the catalog that is available now.
+              Pilihan dari katalog yang tersedia saat ini.
             </p>
           </div>
           <Link
             href="/products"
             className="shrink-0 text-sm font-semibold text-indigo-600 hover:text-indigo-800"
           >
-            View all
+            Lihat semua
           </Link>
         </div>
 
         {products.length === 0 ? (
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-12 text-center">
-            <p className="text-gray-600 dark:text-gray-300 font-medium">No products in the catalog yet.</p>
+            <p className="text-gray-600 dark:text-gray-300 font-medium">Belum ada produk di katalog.</p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-              Check back later, or open the product page.
+              Cek lagi nanti, atau buka halaman produk.
             </p>
             <Link
               href="/products"
               className="inline-flex mt-6 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg"
             >
-              Browse products
+              Jelajahi produk
             </Link>
           </div>
         ) : (
@@ -134,16 +134,16 @@ export default async function Home() {
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <span className="text-sm text-gray-400">No photo</span>
+                      <span className="text-sm text-gray-400">Tidak ada foto</span>
                     )}
                     {p.stock <= 5 && p.stock > 0 && (
                       <span className="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full z-10">
-                        Low stock
+                        Stok menipis
                       </span>
                     )}
                     {p.stock <= 0 && (
                       <span className="absolute top-3 left-3 bg-gray-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full z-10">
-                        Sold out
+                        Habis
                       </span>
                     )}
                   </div>
@@ -156,10 +156,10 @@ export default async function Home() {
                     </h3>
                   </Link>
                   <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 min-h-10">
-                    {p.description || "No description."}
+                    {p.description || "Tidak ada deskripsi."}
                   </p>
                   <p className={`text-xs font-medium mb-4 ${p.stock > 0 ? "text-emerald-600" : "text-red-500"}`}>
-                    {p.stock > 0 ? `${p.stock} in stock` : "Out of stock"}
+                    {p.stock > 0 ? `${p.stock} tersedia` : "Stok habis"}
                   </p>
                   <div className="mt-auto flex flex-col gap-3">
                     <div className="text-lg font-bold text-gray-900 dark:text-white">
@@ -177,16 +177,16 @@ export default async function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="rounded-2xl bg-indigo-600 text-white px-8 py-10 md:flex md:items-center md:justify-between gap-6">
           <div>
-            <h2 className="text-2xl font-bold">Ready to shop?</h2>
+            <h2 className="text-2xl font-bold">Siap belanja?</h2>
             <p className="mt-2 text-indigo-100 max-w-xl">
-              Open the full catalog, choose what you need, and finish the order from your cart.
+              Buka katalog lengkap, pilih yang Anda butuhkan, dan selesaikan pesanan dari keranjang.
             </p>
           </div>
           <Link
             href="/products"
             className="inline-flex mt-6 md:mt-0 justify-center px-6 py-3 bg-white text-indigo-700 font-semibold rounded-lg hover:bg-indigo-50 transition"
           >
-            Browse catalog
+            Jelajahi katalog
           </Link>
         </div>
       </section>

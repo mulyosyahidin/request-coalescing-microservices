@@ -7,11 +7,11 @@ export async function checkoutAction(items: { product_id: string; quantity: numb
   const token = (await cookies()).get("token")?.value;
 
   if (!token) {
-    return { error: "You must be logged in to checkout", redirect: "/login" };
+    return { error: "Anda harus masuk untuk checkout", redirect: "/login" };
   }
 
   if (!items || items.length === 0) {
-    return { error: "Cart is empty" };
+    return { error: "Keranjang kosong" };
   }
 
   try {
@@ -29,10 +29,10 @@ export async function checkoutAction(items: { product_id: string; quantity: numb
       return { success: true, order: response.data.data };
     }
 
-    return { error: response.data?.message || "Checkout failed" };
+    return { error: response.data?.message || "Checkout gagal" };
   } catch (error: any) {
     console.error("Checkout action error:", error?.response?.data || error.message);
-    const errorMessage = error?.response?.data?.message || "Checkout failed due to server error.";
+    const errorMessage = error?.response?.data?.message || "Checkout gagal karena kesalahan server.";
     return { error: errorMessage };
   }
 }

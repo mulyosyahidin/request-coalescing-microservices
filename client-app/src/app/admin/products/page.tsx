@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { apiClient } from "@/lib/axios";
 import ProductsTable from "./ProductsTable";
 import Link from "next/link";
-import { ProductsResponse } from "@/types/product";
+import { Product, ProductsResponse } from "@/types/product";
 
 export default async function AdminProductsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const cookieStore = await cookies();
@@ -27,7 +27,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   const page = sp.page ? parseInt(sp.page, 10) : 1;
   const limit = 10;
 
-  let initialProducts = [];
+  let initialProducts: Product[] = [];
   let total = 0;
   
   try {
@@ -50,9 +50,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/dashboard" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-            &larr; Back to admin
+            &larr; Kembali ke admin
           </Link>
-          <h1 className="text-2xl font-bold">Products</h1>
+          <h1 className="text-2xl font-bold">Produk</h1>
         </div>
 
         <ProductsTable 

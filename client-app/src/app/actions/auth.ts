@@ -14,11 +14,11 @@ export async function registerAction(prevState: any, formData: FormData) {
   const fields = { name, email, password, confirmPassword };
 
   if (password !== confirmPassword) {
-    return { error: "Passwords do not match", fields };
+    return { error: "Kata sandi tidak cocok", fields };
   }
 
   if (!name || !email || !password) {
-    return { error: "All fields are required", fields };
+    return { error: "Semua kolom wajib diisi", fields };
   }
 
   try {
@@ -48,10 +48,10 @@ export async function registerAction(prevState: any, formData: FormData) {
       return { success: true, role };
     }
 
-    return { error: "Account could not be created. Please try again.", fields };
+    return { error: "Akun tidak dapat dibuat. Silakan coba lagi.", fields };
   } catch (error: any) {
     console.error("Register action error:", error?.response?.data || error.message);
-    const errorMessage = error?.response?.data?.message || "Registration failed. Please try again.";
+    const errorMessage = error?.response?.data?.message || "Pendaftaran gagal. Silakan coba lagi.";
     return { error: errorMessage, fields };
   }
 }
@@ -63,7 +63,7 @@ export async function loginAction(prevState: any, formData: FormData) {
   const fields = { email, password };
 
   if (!email || !password) {
-    return { error: "Email and password are required", fields };
+    return { error: "Email dan kata sandi wajib diisi", fields };
   }
 
   try {
@@ -92,10 +92,10 @@ export async function loginAction(prevState: any, formData: FormData) {
       return { success: true, role };
     }
 
-    return { error: "Sign-in could not be completed. Please try again.", fields };
+    return { error: "Masuk tidak berhasil. Silakan coba lagi.", fields };
   } catch (error: any) {
     console.error("Login action error:", error?.response?.data || error.message);
-    const errorMessage = error?.response?.data?.message || "Login failed. Please check your credentials.";
+    const errorMessage = error?.response?.data?.message || "Masuk gagal. Periksa kredensial Anda.";
     return { error: errorMessage, fields };
   }
 }

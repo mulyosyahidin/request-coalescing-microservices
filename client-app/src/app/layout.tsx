@@ -10,7 +10,7 @@ import { logoutAction } from "./actions/auth";
 
 export const metadata: Metadata = {
   title: "Toko",
-  description: "Shop everyday products online.",
+  description: "Belanja kebutuhan sehari-hari secara online.",
 };
 
 export default async function RootLayout({
@@ -33,10 +33,10 @@ export default async function RootLayout({
   }
   
   const dashboardLink = role === "admin" ? "/admin/dashboard" : "/customer/dashboard";
-  const accountLabel = role === "admin" ? "Admin" : "Account";
+  const accountLabel = role === "admin" ? "Admin" : "Akun";
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="id" suppressHydrationWarning>
       <body className="font-sans antialiased min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <ThemeProvider
           attribute="class"
@@ -64,10 +64,10 @@ export default async function RootLayout({
                 {/* Navigation Links */}
                 <nav className="hidden md:flex items-center space-x-8 text-sm font-medium">
                   <a href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 transition-colors">
-                    Home
+                    Beranda
                   </a>
                   <a href="/products" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 transition-colors">
-                    Products
+                    Produk
                   </a>
                 </nav>
 
@@ -85,7 +85,7 @@ export default async function RootLayout({
                       </a>
                       <form action={logoutAction}>
                         <button className="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition">
-                          Sign out
+                          Keluar
                         </button>
                       </form>
                     </>
@@ -95,13 +95,13 @@ export default async function RootLayout({
                         href="/login"
                         className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                       >
-                        Sign In
+                        Masuk
                       </a>
                       <a
                         href="/register"
                         className="text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg shadow-sm shadow-indigo-200 transition"
                       >
-                        Create Account
+                        Daftar
                       </a>
                     </>
                   )}
@@ -124,18 +124,18 @@ export default async function RootLayout({
                     T
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    © 2026 Toko. Shop everyday products online.
+                    © 2026 Toko. Belanja kebutuhan sehari-hari secara online.
                   </p>
                 </div>
                 <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
-                  <a href="/products" className="hover:text-indigo-600 transition">Products</a>
-                  <a href="/cart" className="hover:text-indigo-600 transition">Cart</a>
+                  <a href="/products" className="hover:text-indigo-600 transition">Produk</a>
+                  <a href="/cart" className="hover:text-indigo-600 transition">Keranjang</a>
                   {isAuthenticated ? (
                     <a href={dashboardLink} className="hover:text-indigo-600 transition">{accountLabel}</a>
                   ) : (
                     <>
-                      <a href="/login" className="hover:text-indigo-600 transition">Login</a>
-                      <a href="/register" className="hover:text-indigo-600 transition">Register</a>
+                      <a href="/login" className="hover:text-indigo-600 transition">Masuk</a>
+                      <a href="/register" className="hover:text-indigo-600 transition">Daftar</a>
                     </>
                   )}
                 </div>

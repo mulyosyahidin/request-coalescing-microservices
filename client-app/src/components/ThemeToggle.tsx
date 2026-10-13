@@ -22,7 +22,7 @@ export function ThemeToggle() {
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-lg border border-gray-200 dark:border-gray-700 hover:scale-110 transition-transform flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      aria-label="Toggle Dark Mode"
+      aria-label="Alihkan Mode Gelap"
     >
       {theme === "dark" ? (
         <span className="text-xl leading-none">🌞</span>

@@ -55,7 +55,7 @@ export function AddToCartButton({ product, showQuantity = true, variant = "detai
   if (!mounted) {
     return (
       <button disabled className={`bg-gray-300 dark:bg-gray-800 text-gray-500 rounded-xl cursor-not-allowed ${variant === "detail" ? "w-full py-4" : "px-3 py-1.5 text-xs"}`}>
-        Loading...
+        Memuat...
       </button>
     );
   }
@@ -67,7 +67,7 @@ export function AddToCartButton({ product, showQuantity = true, variant = "detai
       {/* Quantity Selector */}
       {showQuantity && remainingStock > 0 && !isList && (
         <div className="flex items-center gap-4">
-          <span className="text-gray-700 dark:text-gray-300 font-medium">Quantity:</span>
+          <span className="text-gray-700 dark:text-gray-300 font-medium">Jumlah:</span>
           <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
             <button 
               onClick={decrement}
@@ -88,7 +88,7 @@ export function AddToCartButton({ product, showQuantity = true, variant = "detai
             </button>
           </div>
           <span className="text-sm text-gray-500">
-            ({remainingStock} available)
+            ({remainingStock} tersedia)
           </span>
         </div>
       )}
@@ -104,21 +104,21 @@ export function AddToCartButton({ product, showQuantity = true, variant = "detai
           }`}
         >
           {added
-            ? "Added ✓"
+            ? "Ditambahkan ✓"
             : inCart && remainingStock > 0
-            ? (isList ? "+1" : "Add More to Cart")
+            ? (isList ? "+1" : "Tambah Lagi ke Keranjang")
             : remainingStock > 0
-            ? "Add to Cart"
-            : "Out of Stock"}
+            ? "Tambah ke Keranjang"
+            : "Stok Habis"}
         </button>
 
         {inCart && (
           <button
             onClick={handleRemove}
             className={`${isList ? "px-2 py-1.5 text-xs rounded-lg" : "w-full py-3 text-base rounded-xl border-2"} font-bold transition border-red-500 text-red-500 hover:bg-red-500 hover:text-white dark:border-red-600 dark:text-red-500 dark:hover:bg-red-600 dark:hover:text-white`}
-            title="Remove from cart"
+            title="Hapus dari keranjang"
           >
-            {isList ? "✕" : `Remove from Cart (${existingItem.quantity} items)`}
+            {isList ? "✕" : `Hapus dari Keranjang (${existingItem.quantity} item)`}
           </button>
         )}
       </div>

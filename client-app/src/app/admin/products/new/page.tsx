@@ -36,7 +36,7 @@ export default function NewProductPage() {
       
       const uploadResult = await uploadPhotoAction(uploadData);
       if (!uploadResult.success) {
-        setError(uploadResult.error || "Failed to upload photo");
+        setError(uploadResult.error || "Gagal mengunggah foto");
         setLoading(false);
         return;
       }
@@ -51,7 +51,7 @@ export default function NewProductPage() {
     if (result.success) {
       router.push("/admin/products");
     } else {
-      setError(result.error || "Failed to create product");
+      setError(result.error || "Gagal membuat produk");
       setLoading(false);
     }
   };
@@ -61,9 +61,9 @@ export default function NewProductPage() {
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/products" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-            &larr; Back to Products
+            &larr; Kembali ke Produk
           </Link>
-          <h1 className="text-2xl font-bold">Add New Product</h1>
+          <h1 className="text-2xl font-bold">Tambah Produk Baru</h1>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
@@ -77,29 +77,29 @@ export default function NewProductPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Product Name</label>
+                  <label className="block text-sm font-medium mb-1">Nama Produk</label>
                   <input required name="name" type="text" className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Price (Rp)</label>
+                  <label className="block text-sm font-medium mb-1">Harga (Rp)</label>
                   <input required name="price" type="number" min="0" className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Stock</label>
+                  <label className="block text-sm font-medium mb-1">Stok</label>
                   <input required name="stock" type="number" min="0" defaultValue="0" className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Description</label>
+                  <label className="block text-sm font-medium mb-1">Deskripsi</label>
                   <textarea name="description" rows={4} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"></textarea>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <label className="block text-sm font-medium mb-1">Product Photo</label>
+                <label className="block text-sm font-medium mb-1">Foto Produk</label>
                 <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center">
                   {preview ? (
                     <div className="relative w-full aspect-square mb-4">
-                      <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                      <img src={preview} alt="Pratinjau" className="w-full h-full object-cover rounded-lg" />
                       <button 
                         type="button" 
                         onClick={() => { setFile(null); setPreview(null); }}
@@ -110,7 +110,7 @@ export default function NewProductPage() {
                     </div>
                   ) : (
                     <div className="w-full aspect-square mb-4 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-400">
-                      No Image
+                      Tidak ada gambar
                     </div>
                   )}
                   <input 
@@ -129,7 +129,7 @@ export default function NewProductPage() {
                 disabled={loading}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-lg transition"
               >
-                {loading ? "Saving..." : "Save Product"}
+                {loading ? "Menyimpan..." : "Simpan Produk"}
               </button>
             </div>
           </form>

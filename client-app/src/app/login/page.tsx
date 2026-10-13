@@ -24,10 +24,10 @@ export default function LoginPage() {
         {/* Card Header */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Sign in
+            Masuk
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Use your account to check out and view your orders.
+            Gunakan akun Anda untuk checkout dan melihat pesanan.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-              Email Address
+              Alamat Email
             </label>
             <input
               type="email"
@@ -55,7 +55,7 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-              Password
+              Kata Sandi
             </label>
             <input
               type="password"
@@ -72,15 +72,15 @@ export default function LoginPage() {
             disabled={isPending}
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition"
           >
-            {isPending ? "Signing in..." : "Sign In"}
+            {isPending ? "Sedang masuk..." : "Masuk"}
           </button>
         </form>
 
         {/* Footer Link to Register */}
         <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-800">
-          Don&apos;t have an account?{" "}
+          Belum punya akun?{" "}
           <a href="/register" className="font-semibold text-indigo-600 hover:text-indigo-800">
-            Create an account
+            Daftar sekarang
           </a>
         </div>
       </div>

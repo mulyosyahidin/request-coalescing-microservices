@@ -19,7 +19,7 @@ export async function deleteProductAction(id: string) {
       revalidatePath("/admin/products");
       return { success: true };
     }
-    return { success: false, error: res.data?.message || "Failed to delete product" };
+    return { success: false, error: res.data?.message || "Gagal menghapus produk" };
   } catch (error: any) {
     return { success: false, error: error.response?.data?.message || error.message };
   }
@@ -40,7 +40,7 @@ export async function uploadPhotoAction(formData: FormData) {
     if (res.data?.success) {
       return { success: true, photo_url: res.data.data.photo_url };
     }
-    return { success: false, error: res.data?.message || "Upload failed" };
+    return { success: false, error: res.data?.message || "Unggah gagal" };
   } catch (error: any) {
     return { success: false, error: error.response?.data?.message || error.message };
   }
@@ -74,7 +74,7 @@ export async function createProductAction(prevState: any, formData: FormData) {
       return { success: true };
     }
     
-    return { success: false, error: res.data?.message || "Failed to create product" };
+    return { success: false, error: res.data?.message || "Gagal membuat produk" };
   } catch (error: any) {
     return { success: false, error: error.response?.data?.message || error.message };
   }
@@ -109,7 +109,7 @@ export async function updateProductAction(prevState: any, formData: FormData) {
       return { success: true };
     }
     
-    return { success: false, error: res.data?.message || "Failed to update product" };
+    return { success: false, error: res.data?.message || "Gagal memperbarui produk" };
   } catch (error: any) {
     return { success: false, error: error.response?.data?.message || error.message };
   }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { updateProductAction, uploadPhotoAction } from "@/app/actions/product";
 import { Product } from "@/types/product";
@@ -38,7 +37,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       
       const uploadResult = await uploadPhotoAction(uploadData);
       if (!uploadResult.success) {
-        setError(uploadResult.error || "Failed to upload photo");
+        setError(uploadResult.error || "Gagal mengunggah foto");
         setLoading(false);
         return;
       }
@@ -53,7 +52,7 @@ export default function EditProductForm({ product }: { product: Product }) {
     if (result.success) {
       router.push(`/admin/products/${product.id}`);
     } else {
-      setError(result.error || "Failed to update product");
+      setError(result.error || "Gagal memperbarui produk");
       setLoading(false);
     }
   };
@@ -70,29 +69,29 @@ export default function EditProductForm({ product }: { product: Product }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Product Name</label>
+              <label className="block text-sm font-medium mb-1">Nama Produk</label>
               <input required name="name" type="text" defaultValue={product.name} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Price (Rp)</label>
+              <label className="block text-sm font-medium mb-1">Harga (Rp)</label>
               <input required name="price" type="number" min="0" defaultValue={product.price} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Stock</label>
+              <label className="block text-sm font-medium mb-1">Stok</label>
               <input required name="stock" type="number" min="0" defaultValue={product.stock} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Description</label>
+              <label className="block text-sm font-medium mb-1">Deskripsi</label>
               <textarea name="description" rows={4} defaultValue={product.description || ""} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"></textarea>
             </div>
           </div>
 
           <div className="space-y-4">
-            <label className="block text-sm font-medium mb-1">Product Photo</label>
+            <label className="block text-sm font-medium mb-1">Foto Produk</label>
             <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center">
               {preview ? (
                 <div className="relative w-full aspect-square mb-4">
-                  <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                  <img src={preview} alt="Pratinjau" className="w-full h-full object-cover rounded-lg" />
                   <button 
                     type="button" 
                     onClick={() => { setFile(null); setPreview(null); }}
@@ -103,7 +102,7 @@ export default function EditProductForm({ product }: { product: Product }) {
                 </div>
               ) : (
                 <div className="w-full aspect-square mb-4 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center text-gray-400">
-                  No Image
+                  Tidak ada gambar
                 </div>
               )}
               <input 
@@ -122,7 +121,7 @@ export default function EditProductForm({ product }: { product: Product }) {
             disabled={loading}
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-lg transition"
           >
-            {loading ? "Updating..." : "Update Product"}
+            {loading ? "Memperbarui..." : "Perbarui Produk"}
           </button>
         </div>
       </form>

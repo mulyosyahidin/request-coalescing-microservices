@@ -44,9 +44,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   if (!product) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+        <h1 className="text-2xl font-bold mb-4">Produk Tidak Ditemukan</h1>
         <Link href="/admin/products" className="text-blue-600 hover:underline">
-          &larr; Back to Products
+          &larr; Kembali ke Produk
         </Link>
       </div>
     );
@@ -61,9 +61,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4 mb-8">
           <Link href="/admin/products" className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-            &larr; Back to Products
+            &larr; Kembali ke Produk
           </Link>
-          <h1 className="text-2xl font-bold">Product Details</h1>
+          <h1 className="text-2xl font-bold">Detail Produk</h1>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col md:flex-row">
@@ -72,7 +72,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <img src={product.photo_url} alt={product.name} className="w-full max-w-xs object-cover rounded-xl shadow-md" />
             ) : (
               <div className="w-full aspect-square max-w-xs bg-gray-200 dark:bg-gray-700 rounded-xl flex items-center justify-center text-gray-400">
-                No Image
+                Tidak ada gambar
               </div>
             )}
           </div>
@@ -85,7 +85,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 product.stock > 0 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
                 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
               }`}>
-                Stock: {product.stock}
+                Stok: {product.stock}
               </span>
             </div>
             
@@ -94,8 +94,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </p>
             
             <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 mb-8 flex-grow">
-              <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">Description</h3>
-              <p>{product.description || "No description provided."}</p>
+              <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-2">Deskripsi</h3>
+              <p>{product.description || "Tidak ada deskripsi."}</p>
             </div>
             
             <div className="pt-6 border-t border-gray-200 dark:border-gray-800 flex gap-4">
@@ -103,7 +103,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 href={`/admin/products/${product.id}/edit`}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition text-center"
               >
-                Edit Product
+                Ubah Produk
               </Link>
               <DeleteProductButton id={product.id} />
             </div>
